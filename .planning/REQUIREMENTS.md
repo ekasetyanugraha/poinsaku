@@ -31,9 +31,9 @@ Requirements for this milestone. Each maps to roadmap phases.
 
 ### Staff Authentication
 
-- [ ] **AUTH-01**: Staff can log in via a separate dedicated login page
-- [ ] **AUTH-02**: Staff are redirected based on role after login (cashier to /cashier, admin to /dashboard)
-- [ ] **AUTH-03**: Staff cannot change their own passwords
+- [x] **AUTH-01**: Staff can log in via a separate dedicated login page
+- [x] **AUTH-02**: Staff are redirected based on role after login (cashier to /cashier, admin to /dashboard)
+- [x] **AUTH-03**: Staff cannot change their own passwords
 
 ## v2 Requirements
 
@@ -86,9 +86,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DISP-02 | Phase 3 | Pending |
 | DISP-03 | Phase 3 | Pending |
 | DISP-04 | Phase 3 | Complete |
-| AUTH-01 | Phase 3 | Pending |
-| AUTH-02 | Phase 3 | Pending |
-| AUTH-03 | Phase 3 | Pending |
+| AUTH-01 | Phase 3 | Complete |
+| AUTH-02 | Phase 3 | Complete |
+| AUTH-03 | Phase 3 | Complete |
 
 **Coverage:**
 - v1 requirements: 16 total

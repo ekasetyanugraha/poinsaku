@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 03-01-PLAN.md
-last_updated: "2026-03-20T08:53:35.036Z"
+stopped_at: "Checkpoint:human-verify after 03-03 Task 1 — awaiting verification of /staff/login"
+last_updated: "2026-03-20T08:59:12.377Z"
 progress:
   total_phases: 3
   completed_phases: 2
   total_plans: 7
-  completed_plans: 5
+  completed_plans: 6
 ---
 
 # Project State
@@ -51,6 +51,7 @@ Plan: 2 of 3
 | Phase 02-server-api P03 | 2m | 2 tasks | 3 files |
 | Phase 02-server-api P02 | 3 | 2 tasks | 2 files |
 | Phase 03-client-layer P01 | 2 | 2 tasks | 4 files |
+| Phase 03 P03 | 1min | 1 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -76,6 +77,8 @@ Recent decisions affecting current work:
 - [Phase 02-server-api]: DELETE order: member row deleted before auth user so orphan auth user has no business access if auth delete fails
 - [Phase 03-client-layer]: GET /api/staff requires owner role since listing staff exposes email addresses from auth admin API
 - [Phase 03-client-layer]: relativeTime exported at module level (not inside useStaff) for independent testability and template imports
+- [Phase 03]: AUTH-03 enforced by omission: no password change UI built for staff roles
+- [Phase 03]: Split auth middleware: /cashier routes redirect to /staff/login, /dashboard routes to /login
 
 ### Pending Todos
 
@@ -89,6 +92,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-20T08:53:35.033Z
-Stopped at: Completed 03-01-PLAN.md
+Last session: 2026-03-20T08:59:12.374Z
+Stopped at: Checkpoint:human-verify after 03-03 Task 1 — awaiting verification of /staff/login
 Resume file: None
