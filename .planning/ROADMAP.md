@@ -26,7 +26,10 @@ Decimal phases appear between their surrounding integers in numeric order.
   1. The `members` table has `is_active` (boolean, default true) and `display_name` (text, nullable) columns present in the Supabase schema
   2. A server route calling `serverSupabaseServiceRole(event).auth.admin.createUser(...)` executes without a type error or runtime exception
   3. The `requireMember()` utility rejects requests from members where `is_active = false` at the DB level (not just JWT level)
-**Plans**: TBD
+**Plans:** 1 plan
+
+Plans:
+- [ ] 01-01-PLAN.md — Database migration, TypeScript types, Zod validators, requireMember active-check, createAuthUser utility
 
 ### Phase 2: Server API
 **Goal**: Owners can fully manage staff accounts (create, reset password, deactivate, reactivate, delete, reassign) entirely through server API endpoints with no client-side Supabase calls
@@ -59,6 +62,6 @@ Phases execute in numeric order: 1 → 2 → 3
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 0/? | Not started | - |
+| 1. Foundation | 0/1 | Planning complete | - |
 | 2. Server API | 0/? | Not started | - |
 | 3. Client Layer | 0/? | Not started | - |
