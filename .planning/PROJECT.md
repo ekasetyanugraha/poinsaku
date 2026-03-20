@@ -1,8 +1,8 @@
-# Stampku — Staff Account Management
+# PoinSaku — Staff Account Management
 
 ## What This Is
 
-A staff account management system for Stampku, a QR-based loyalty program platform. Business owners can create, manage, and control accounts for their admins and cashiers, assign them to specific branches, and maintain full control over credentials. This builds on top of the existing member/role system already in the codebase.
+A staff account management system for PoinSaku, a QR-based loyalty program platform. Business owners can create, manage, and control accounts for their admins and cashiers, assign them to specific branches, and maintain full control over credentials. This builds on top of the existing member/role system already in the codebase.
 
 ## Core Value
 
@@ -48,7 +48,7 @@ Business owners can create and fully control staff accounts (admins and cashiers
 
 ## Context
 
-- Stampku already has a working loyalty platform with businesses, branches, programs, stamps, cashback, vouchers, and transactions
+- PoinSaku already has a working loyalty platform with businesses, branches, programs, stamps, cashback, vouchers, and transactions
 - The existing `members` table and API support role (owner/admin/cashier) and scope (business/branch) assignment
 - Current `inviteMember()` requires an existing `auth_user_id` — the gap is creating the auth account itself
 - Supabase Admin API (`supabase.auth.admin`) can create users server-side with predetermined passwords
