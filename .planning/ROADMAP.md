@@ -41,7 +41,7 @@ Plans:
   3. A PUT to `/api/staff/[id]/status` as owner toggles `ban_duration` on the auth user and flips `is_active` on the members row; subsequent API calls from a deactivated staff member return 403 immediately (not waiting for JWT expiry)
   4. A DELETE to `/api/staff/[id]` as owner removes both the `members` row and the Supabase Auth user; the email address is immediately re-usable
   5. A PUT to `/api/members/[id]` as owner can update the `branch_id` or scope for a staff member (reassignment)
-**Plans:** 1/3 plans executed
+**Plans:** 2/3 plans executed
 
 Plans:
 - [ ] 02-01-PLAN.md — Vitest setup, staff Zod schemas with unit tests, auth admin wrapper functions
@@ -68,5 +68,5 @@ Phases execute in numeric order: 1 → 2 → 3
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation | 1/1 | Complete   | 2026-03-20 |
-| 2. Server API | 1/3 | In Progress|  |
+| 2. Server API | 2/3 | In Progress|  |
 | 3. Client Layer | 0/? | Not started | - |

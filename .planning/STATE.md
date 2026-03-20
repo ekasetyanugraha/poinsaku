@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 02-server-api-01-PLAN.md
-last_updated: "2026-03-20T07:12:29.990Z"
+stopped_at: Completed 02-server-api-03-PLAN.md
+last_updated: "2026-03-20T07:17:38.279Z"
 progress:
   total_phases: 3
   completed_phases: 1
   total_plans: 4
-  completed_plans: 2
+  completed_plans: 3
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-20)
 ## Current Position
 
 Phase: 02 (server-api) — EXECUTING
-Plan: 1 of 3
+Plan: 3 of 3 (COMPLETE)
 
 ## Performance Metrics
 
@@ -48,6 +48,7 @@ Plan: 1 of 3
 *Updated after each plan completion*
 | Phase 01-foundation P01 | 2 | 3 tasks | 5 files |
 | Phase 02-server-api P01 | 3m | 3 tasks | 5 files |
+| Phase 02-server-api P03 | 2m | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -67,6 +68,8 @@ Recent decisions affecting current work:
 - [Phase 02-server-api]: Used --legacy-peer-deps for vitest install due to pre-existing vue-router v5 vs @nuxt/ui peer conflict
 - [Phase 02-server-api]: ban_duration: '87600h' for deactivation (10 years), 'none' for unban — per project-decided constants
 - [Phase 02-server-api]: createStaffSchema role enum excludes 'owner' — only admin and cashier can be created through staff endpoints
+- [Phase 02-server-api]: Partial failure on status change returns success+warning (auth ban/unban is the stronger protection; DB state can be repaired by retry)
+- [Phase 02-server-api]: Branch reassignment validates new scope belongs to same business before updating — prevents cross-business scope assignment
 
 ### Pending Todos
 
@@ -80,6 +83,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-20T07:12:29.987Z
-Stopped at: Completed 02-server-api-01-PLAN.md
+Last session: 2026-03-20T07:17:38.277Z
+Stopped at: Completed 02-server-api-03-PLAN.md
 Resume file: None
