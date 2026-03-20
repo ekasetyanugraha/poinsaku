@@ -74,5 +74,9 @@ Business owners can create and fully control staff accounts (admins and cashiers
 | One branch per staff member | Simplicity — avoid complex multi-assignment logic | — Pending |
 | Enhance existing members page (not new section) | Consistent with current navigation, less UI surface area | — Pending |
 
+## Current State
+
+- Phase 1 complete — database schema supports `is_active` and `display_name` on members table, `requireMember()` rejects inactive accounts, `createAuthUser()` utility wraps `auth.admin.createUser`
+
 ---
-*Last updated: 2026-03-20 after initialization*
+*Last updated: 2026-03-20 after Phase 1 completion*
