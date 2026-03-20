@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Phase 2 context gathered
-last_updated: "2026-03-20T06:46:05.222Z"
+stopped_at: Completed 02-server-api-01-PLAN.md
+last_updated: "2026-03-20T07:12:29.990Z"
 progress:
   total_phases: 3
   completed_phases: 1
-  total_plans: 1
-  completed_plans: 1
+  total_plans: 4
+  completed_plans: 2
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-20)
 
 **Core value:** Business owners can create and fully control staff accounts (admins and cashiers) without staff having self-service access to credentials.
-**Current focus:** Phase 01 — foundation
+**Current focus:** Phase 02 — server-api
 
 ## Current Position
 
-Phase: 01 (foundation) — EXECUTING
-Plan: 1 of 1
+Phase: 02 (server-api) — EXECUTING
+Plan: 1 of 3
 
 ## Performance Metrics
 
@@ -47,6 +47,7 @@ Plan: 1 of 1
 
 *Updated after each plan completion*
 | Phase 01-foundation P01 | 2 | 3 tasks | 5 files |
+| Phase 02-server-api P01 | 3m | 3 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -63,6 +64,9 @@ Recent decisions affecting current work:
 - [Phase 01-foundation]: is_active check placed after member-not-found and before role check (auth -> exists -> active -> role)
 - [Phase 01-foundation]: No index on is_active: low cardinality, member queries filter by indexed auth_user_id/scope_id first
 - [Phase 01-foundation]: email_confirm: true in createAuthUser — owner creates accounts directly, no email verification
+- [Phase 02-server-api]: Used --legacy-peer-deps for vitest install due to pre-existing vue-router v5 vs @nuxt/ui peer conflict
+- [Phase 02-server-api]: ban_duration: '87600h' for deactivation (10 years), 'none' for unban — per project-decided constants
+- [Phase 02-server-api]: createStaffSchema role enum excludes 'owner' — only admin and cashier can be created through staff endpoints
 
 ### Pending Todos
 
@@ -76,6 +80,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-20T06:46:05.216Z
-Stopped at: Phase 2 context gathered
-Resume file: .planning/phases/02-server-api/02-CONTEXT.md
+Last session: 2026-03-20T07:12:29.987Z
+Stopped at: Completed 02-server-api-01-PLAN.md
+Resume file: None

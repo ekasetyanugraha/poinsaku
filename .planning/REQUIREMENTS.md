@@ -9,18 +9,18 @@ Requirements for this milestone. Each maps to roadmap phases.
 
 ### Account Creation
 
-- [ ] **ACCT-01**: Owner can create a staff account with email and password
-- [ ] **ACCT-02**: Owner can set display name during staff account creation
-- [ ] **ACCT-03**: Owner can assign role (admin or cashier) during creation
-- [ ] **ACCT-04**: Owner can assign branch/business scope during creation
+- [x] **ACCT-01**: Owner can create a staff account with email and password
+- [x] **ACCT-02**: Owner can set display name during staff account creation
+- [x] **ACCT-03**: Owner can assign role (admin or cashier) during creation
+- [x] **ACCT-04**: Owner can assign branch/business scope during creation
 
 ### Account Management
 
-- [ ] **MGMT-01**: Owner can reset a staff member's password
-- [ ] **MGMT-02**: Owner can deactivate a staff account (suspend login without deleting)
-- [ ] **MGMT-03**: Owner can reactivate a deactivated staff account
+- [x] **MGMT-01**: Owner can reset a staff member's password
+- [x] **MGMT-02**: Owner can deactivate a staff account (suspend login without deleting)
+- [x] **MGMT-03**: Owner can reactivate a deactivated staff account
 - [ ] **MGMT-04**: Owner can permanently delete a staff account
-- [ ] **MGMT-05**: Owner can reassign a staff member to a different branch
+- [x] **MGMT-05**: Owner can reassign a staff member to a different branch
 
 ### Staff Display
 
@@ -73,15 +73,15 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| ACCT-01 | Phase 2 | Pending |
-| ACCT-02 | Phase 2 | Pending |
-| ACCT-03 | Phase 2 | Pending |
-| ACCT-04 | Phase 2 | Pending |
-| MGMT-01 | Phase 2 | Pending |
-| MGMT-02 | Phase 2 | Pending |
-| MGMT-03 | Phase 2 | Pending |
+| ACCT-01 | Phase 2 | Complete |
+| ACCT-02 | Phase 2 | Complete |
+| ACCT-03 | Phase 2 | Complete |
+| ACCT-04 | Phase 2 | Complete |
+| MGMT-01 | Phase 2 | Complete |
+| MGMT-02 | Phase 2 | Complete |
+| MGMT-03 | Phase 2 | Complete |
 | MGMT-04 | Phase 2 | Pending |
-| MGMT-05 | Phase 2 | Pending |
+| MGMT-05 | Phase 2 | Complete |
 | DISP-01 | Phase 3 | Pending |
 | DISP-02 | Phase 3 | Pending |
 | DISP-03 | Phase 3 | Pending |
