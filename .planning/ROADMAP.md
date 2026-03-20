@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation** - Database migration and auth infrastructure verification (completed 2026-03-20)
 - [x] **Phase 2: Server API** - Staff provisioning, password reset, status, and delete endpoints (completed 2026-03-20)
-- [ ] **Phase 3: Client Layer** - Members UI, composable extensions, and staff login page
+- [x] **Phase 3: Client Layer** - Members UI, composable extensions, and staff login page (completed 2026-03-20)
 
 ## Phase Details
 
@@ -58,7 +58,7 @@ Plans:
   3. An owner can create a new staff account through a form on the members page (email, password, display name, role, branch) without leaving the page
   4. An owner can deactivate, reactivate, reset password, reassign branch, or delete a staff member from the members page using per-row action controls
   5. Staff navigate to `/staff/login` to sign in; after authentication, cashiers land on `/cashier` and admins land on `/dashboard/[slug]`; staff have no access to a password change UI
-**Plans:** 2/3 plans executed
+**Plans:** 3/3 plans complete
 
 Plans:
 - [ ] 03-01-PLAN.md — GET /api/staff endpoint with auth enrichment, GET /api/staff/me endpoint, useStaff composable
@@ -74,4 +74,4 @@ Phases execute in numeric order: 1 → 2 → 3
 |-------|----------------|--------|-----------|
 | 1. Foundation | 1/1 | Complete   | 2026-03-20 |
 | 2. Server API | 3/3 | Complete   | 2026-03-20 |
-| 3. Client Layer | 2/3 | In Progress|  |
+| 3. Client Layer | 3/3 | Complete   | 2026-03-20 |

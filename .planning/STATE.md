@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: "Checkpoint:human-verify after 03-03 Task 1 — awaiting verification of /staff/login"
-last_updated: "2026-03-20T08:59:12.377Z"
+stopped_at: "Checkpoint 03-02 Task 2: awaiting human verification of members.vue"
+last_updated: "2026-03-20T08:59:57.968Z"
 progress:
   total_phases: 3
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 7
-  completed_plans: 6
+  completed_plans: 7
 ---
 
 # Project State
@@ -52,6 +52,7 @@ Plan: 2 of 3
 | Phase 02-server-api P02 | 3 | 2 tasks | 2 files |
 | Phase 03-client-layer P01 | 2 | 2 tasks | 4 files |
 | Phase 03 P03 | 1min | 1 tasks | 3 files |
+| Phase 03 P02 | 3 | 1 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -79,6 +80,8 @@ Recent decisions affecting current work:
 - [Phase 03-client-layer]: relativeTime exported at module level (not inside useStaff) for independent testability and template imports
 - [Phase 03]: AUTH-03 enforced by omission: no password change UI built for staff roles
 - [Phase 03]: Split auth middleware: /cashier routes redirect to /staff/login, /dashboard routes to /login
+- [Phase 03-client-layer]: scope_type starts as empty string in create form — owner must explicitly choose scope (no default, per CONTEXT locked decision)
+- [Phase 03-client-layer]: Reactivate action skips confirmation modal — non-destructive, immediate toggle
 
 ### Pending Todos
 
@@ -92,6 +95,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-20T08:59:12.374Z
-Stopped at: Checkpoint:human-verify after 03-03 Task 1 — awaiting verification of /staff/login
+Last session: 2026-03-20T08:59:44.655Z
+Stopped at: Checkpoint 03-02 Task 2: awaiting human verification of members.vue
 Resume file: None
