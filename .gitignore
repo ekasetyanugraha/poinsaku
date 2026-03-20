@@ -27,6 +27,3 @@ tasks
 
 # Supabase local
 supabase/.temp
-
-# GSD planning (local only)
-.planning
