@@ -12,7 +12,7 @@ Three phases that layer new capability onto the existing member system. Phase 1 
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Foundation** - Database migration and auth infrastructure verification
+- [x] **Phase 1: Foundation** - Database migration and auth infrastructure verification (completed 2026-03-20)
 - [ ] **Phase 2: Server API** - Staff provisioning, password reset, status, and delete endpoints
 - [ ] **Phase 3: Client Layer** - Members UI, composable extensions, and staff login page
 
@@ -26,7 +26,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   1. The `members` table has `is_active` (boolean, default true) and `display_name` (text, nullable) columns present in the Supabase schema
   2. A server route calling `serverSupabaseServiceRole(event).auth.admin.createUser(...)` executes without a type error or runtime exception
   3. The `requireMember()` utility rejects requests from members where `is_active = false` at the DB level (not just JWT level)
-**Plans:** 1 plan
+**Plans:** 1/1 plans complete
 
 Plans:
 - [ ] 01-01-PLAN.md — Database migration, TypeScript types, Zod validators, requireMember active-check, createAuthUser utility
@@ -62,6 +62,6 @@ Phases execute in numeric order: 1 → 2 → 3
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 0/1 | Planning complete | - |
+| 1. Foundation | 1/1 | Complete   | 2026-03-20 |
 | 2. Server API | 0/? | Not started | - |
 | 3. Client Layer | 0/? | Not started | - |
