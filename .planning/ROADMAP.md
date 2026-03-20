@@ -41,7 +41,12 @@ Plans:
   3. A PUT to `/api/staff/[id]/status` as owner toggles `ban_duration` on the auth user and flips `is_active` on the members row; subsequent API calls from a deactivated staff member return 403 immediately (not waiting for JWT expiry)
   4. A DELETE to `/api/staff/[id]` as owner removes both the `members` row and the Supabase Auth user; the email address is immediately re-usable
   5. A PUT to `/api/members/[id]` as owner can update the `branch_id` or scope for a staff member (reassignment)
-**Plans**: TBD
+**Plans:** 3 plans
+
+Plans:
+- [ ] 02-01-PLAN.md — Vitest setup, staff Zod schemas with unit tests, auth admin wrapper functions
+- [ ] 02-02-PLAN.md — Staff creation (POST /api/staff) and deletion (DELETE /api/staff/[id]) endpoints
+- [ ] 02-03-PLAN.md — Password reset, status toggle, and branch reassignment endpoints
 
 ### Phase 3: Client Layer
 **Goal**: Owners see a fully functional staff management UI with readable member details and status controls, and staff log in through a dedicated page with correct role-based routing
@@ -63,5 +68,5 @@ Phases execute in numeric order: 1 → 2 → 3
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation | 1/1 | Complete   | 2026-03-20 |
-| 2. Server API | 0/? | Not started | - |
+| 2. Server API | 0/3 | Planning complete | - |
 | 3. Client Layer | 0/? | Not started | - |
