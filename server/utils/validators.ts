@@ -24,6 +24,8 @@ export const memberSchema = z.object({
   role: z.enum(['owner', 'admin', 'cashier']),
   scope_type: z.enum(['business', 'branch']),
   scope_id: z.string().uuid(),
+  is_active: z.boolean().default(true),
+  display_name: z.string().max(100).nullable().optional(),
 })
 
 export const programBaseSchema = z.object({

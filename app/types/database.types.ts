@@ -330,6 +330,8 @@ export type Database = {
           created_at: string
           id: string
           invited_by: string | null
+          is_active: boolean
+          display_name: string | null
           role: Database["public"]["Enums"]["member_role"]
           scope_id: string
           scope_type: Database["public"]["Enums"]["member_scope_type"]
@@ -339,6 +341,8 @@ export type Database = {
           created_at?: string
           id?: string
           invited_by?: string | null
+          is_active?: boolean
+          display_name?: string | null
           role: Database["public"]["Enums"]["member_role"]
           scope_id: string
           scope_type: Database["public"]["Enums"]["member_scope_type"]
@@ -348,6 +352,8 @@ export type Database = {
           created_at?: string
           id?: string
           invited_by?: string | null
+          is_active?: boolean
+          display_name?: string | null
           role?: Database["public"]["Enums"]["member_role"]
           scope_id?: string
           scope_type?: Database["public"]["Enums"]["member_scope_type"]
