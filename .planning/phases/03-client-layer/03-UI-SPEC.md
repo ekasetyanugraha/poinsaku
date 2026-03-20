@@ -22,7 +22,7 @@ created: 2026-03-20
 | Preset | not applicable |
 | Component library | @nuxt/ui v4 — UCard, UBadge, UButton, UInput, USelect, URadioGroup, UFormField, USlideover, UDropdownMenu, UModal, USwitch |
 | Icon library | Lucide via `i-lucide-*` (e.g. `i-lucide-ellipsis-vertical`, `i-lucide-trash-2`) |
-| Font | DM Sans 400/500/600/700 — loaded from Google Fonts in `nuxt.config.ts` |
+| Font | DM Sans 400/600 — loaded from Google Fonts in `nuxt.config.ts` |
 | Style approach | Glassmorphism — glass utilities defined in `app/assets/css/main.css` |
 
 Source: `nuxt.config.ts`, `app/app.config.ts`, `app/assets/css/main.css`, `design-system/poinsaku/MASTER.md`
@@ -37,7 +37,7 @@ Declared values (multiples of 4 only):
 |-------|-------|-------|
 | xs | 4px | Icon gaps, badge padding, inline spacing |
 | sm | 8px | Compact element spacing, row gaps within cards |
-| md | 16px | Default field spacing, card padding, form `space-y-3` (12px) to `space-y-4` (16px) |
+| md | 16px | Default field spacing, card padding, staff list card row internal spacing (`space-y-4`) |
 | lg | 24px | Section gaps, modal body padding |
 | xl | 32px | Layout gaps between major sections |
 | 2xl | 48px | Empty state vertical padding (`py-12`) |
@@ -46,7 +46,6 @@ Declared values (multiples of 4 only):
 Exceptions:
 - Touch targets for icon-only action buttons (three-dot menu trigger): minimum 44px height via `size="sm"` + padding (Nuxt UI handles this)
 - Sidebar width: fixed 224px (w-56) — inherits from `dashboard.vue` layout
-- Staff list card rows: 12px internal spacing (Tailwind `space-y-3`) matching existing `members.vue` pattern
 
 Source: Existing `members.vue`, `dashboard.vue` layout patterns — pre-populated, not defaulted.
 
@@ -56,18 +55,19 @@ Source: Existing `members.vue`, `dashboard.vue` layout patterns — pre-populate
 
 | Role | Size | Weight | Line Height | Usage |
 |------|------|--------|-------------|-------|
-| Body | 14px | 400 (regular) | 1.5 | Staff list secondary info, muted labels, badge text |
-| Label | 13px | 500 (medium) | 1.4 | Sidebar nav items, form field labels, compact UI text |
+| Body | 14px | 400 (regular) | 1.5 | Staff list secondary info, muted labels, badge text, sidebar nav items, form field labels, compact UI text |
 | Heading | 18px (text-lg) | 600 (semibold) | 1.2 | Page title "Anggota Tim", section headings, modal titles |
 | Display | — | — | — | Not used in this phase |
 
 Notes:
+- Exactly 2 declared weights: 400 (regular) and 600 (semibold). Weight 500 (medium) is NOT a declared scale entry — the project loads DM Sans 400 and 600 only.
+- Label-level text (sidebar nav, form labels, compact UI text at 12px) uses `text-xs` (12px) at weight 400 — it is a size variant of Body, not a separate weight tier.
 - All text in Bahasa Indonesia — no English labels anywhere in rendered UI
 - Error and success inline messages: 14px, weight 400, color from semantic tokens (red-500, success)
 - `font-heading` class uses DM Sans (same as `font-sans`) per `main.css` `@theme` block
 - Page subtitle / description text: 14px, weight 400, `text-(--ui-text-muted)`
 
-Source: Detected from `members.vue` (`text-lg font-semibold`), `login.vue` (`text-sm`), `dashboard.vue` (`text-[13px] font-medium`), `main.css` font definitions.
+Source: Detected from `members.vue` (`text-lg font-semibold`), `login.vue` (`text-sm`), `dashboard.vue` (`text-[13px] font-medium`), `main.css` font definitions. Label size corrected from 13px to 12px per checker review (creates visible hierarchical step from 14px body).
 
 ---
 
@@ -103,13 +103,14 @@ Source: `app.config.ts` (primary: sky, neutral: slate), `main.css` glass tokens,
 | `UButton` `icon="i-lucide-plus"` | default color (primary) | "Tambah Staff" CTA — top-right of page header |
 | `UCard class="glass-card"` | per staff member | Staff list row — one card per member |
 | `UCard class="glass-card"` `:class="{ 'opacity-50': !member.is_active }"` | inactive members | Dimmed row for inactive/deactivated staff |
-| `UBadge color="error" variant="soft"` | owner row only | "Pemilik" badge |
+| `UBadge color="primary" variant="soft"` | owner row only | "Pemilik" badge — accent color per accent contract |
 | `UBadge color="warning" variant="soft"` | admin staff | "Admin" role badge |
 | `UBadge color="neutral" variant="soft"` | cashier staff | "Kasir" role badge |
 | `UBadge color="success" variant="soft"` | active staff | "Aktif" status badge |
 | `UBadge color="neutral" variant="soft"` | inactive staff | "Nonaktif" status badge |
 | `UBadge variant="outline"` | scope display | Branch/business scope badge (branch name or "Bisnis") |
-| `UDropdownMenu` | per non-owner staff row | Three-dot action menu (`i-lucide-ellipsis-vertical`) |
+| `UDropdownMenu` | per non-owner staff row | Three-dot action menu trigger (see below) |
+| `UButton variant="ghost" size="sm" icon="i-lucide-ellipsis-vertical" aria-label="Aksi staff"` | dropdown trigger | Icon-only action button — `aria-label` required for screen readers |
 | `USlideover v-model:open side="right"` | staff creation | Slides from right, 420px wide, keeps list visible |
 | `UModal` | delete confirmation | "Hapus staff [name]?" — requires explicit confirm |
 | `UModal` | deactivate confirmation | "Nonaktifkan staff [name]?" — confirms deactivation |
@@ -161,7 +162,7 @@ Source: CONTEXT.md "Staff login should be minimal/POS-style — no decorative gr
 - On error: inline toast "Gagal membuat staff: [server message]" (error, `i-lucide-alert-circle`)
 
 ### Per-Row Dropdown Actions
-- Trigger: `UButton variant="ghost" size="sm" icon="i-lucide-ellipsis-vertical"` — right side of card
+- Trigger: `UButton variant="ghost" size="sm" icon="i-lucide-ellipsis-vertical" aria-label="Aksi staff"` — right side of card
 - Hidden entirely on owner row (no element rendered, not just disabled)
 - Items for active staff: Reset Password | Pindah Cabang | --- | Nonaktifkan | Hapus
 - Items for inactive staff: Reset Password | Pindah Cabang | Aktifkan | --- | Hapus
@@ -262,6 +263,7 @@ This project uses @nuxt/ui v4 (not shadcn). No `components.json` present. Regist
 
 - All interactive elements have `cursor-pointer` (enforced in `main.css` `@layer base`)
 - Touch targets: 44px minimum height for action buttons (Nuxt UI `size="sm"` meets this)
+- Icon-only action button: `aria-label="Aksi staff"` declared on the three-dot `UButton` trigger
 - Focus states: visible via Nuxt UI defaults (ring on focus)
 - `prefers-reduced-motion`: respected via `main.css` media query (disables all animations)
 - Color contrast: 4.5:1 minimum — `text-(--ui-text-muted)` on white exceeds threshold
