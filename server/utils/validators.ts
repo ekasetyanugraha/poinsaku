@@ -32,7 +32,7 @@ export const programBaseSchema = z.object({
   business_id: z.string().uuid(),
   type: z.enum(['stamp', 'membership']),
   name: z.string().min(1).max(100),
-  description: z.string().optional(),
+  description: z.string().nullable().optional(),
   scope_type: z.enum(['business', 'branch']),
   scope_id: z.string().uuid(),
   color_primary: z.string().regex(/^#[0-9a-fA-F]{6}$/).default('#6366f1'),

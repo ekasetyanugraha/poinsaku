@@ -1,9 +1,22 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'dashboard' })
-const { businessSlug, activeBusinessId } = useBusiness()
+useBusiness()
 const { branches, loading, deleteBranch } = useBranch()
 const { canDelete } = usePermission()
 const toast = useToast()
+
+const modalOpen = ref(false)
+const editingBranch = ref<any>(null)
+
+function openCreate() {
+  editingBranch.value = null
+  modalOpen.value = true
+}
+
+function openEdit(branch: any) {
+  editingBranch.value = branch
+  modalOpen.value = true
+}
 
 async function handleDelete(id: string) {
   if (!confirm('Hapus cabang ini?')) return
@@ -23,9 +36,7 @@ async function handleDelete(id: string) {
         <h1 class="text-lg font-semibold">Cabang</h1>
         <p class="text-sm text-(--ui-text-muted)">Kelola cabang bisnis Anda</p>
       </div>
-      <NuxtLink :to="`/dashboard/${businessSlug}/branches/new`">
-        <UButton icon="i-lucide-plus">Tambah Cabang</UButton>
-      </NuxtLink>
+      <UButton icon="i-lucide-plus" @click="openCreate">Tambah Cabang</UButton>
     </div>
 
     <div v-if="loading" class="flex justify-center py-8">
@@ -48,13 +59,13 @@ async function handleDelete(id: string) {
             <UBadge :color="branch.is_active ? 'success' : 'neutral'" variant="soft">
               {{ branch.is_active ? 'Aktif' : 'Nonaktif' }}
             </UBadge>
-            <NuxtLink :to="`/dashboard/${businessSlug}/branches/${branch.id}`">
-              <UButton variant="ghost" icon="i-lucide-pencil" size="sm" />
-            </NuxtLink>
+            <UButton variant="ghost" icon="i-lucide-pencil" size="sm" @click="openEdit(branch)" />
             <UButton v-if="canDelete" variant="ghost" color="error" icon="i-lucide-trash-2" size="sm" @click="handleDelete(branch.id)" />
           </div>
         </div>
       </UCard>
     </div>
+
+    <BranchFormModal v-model:open="modalOpen" :branch="editingBranch" />
   </div>
 </template>

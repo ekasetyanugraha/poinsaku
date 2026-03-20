@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { z } from 'zod'
+
 definePageMeta({ layout: 'dashboard' })
 const router = useRouter()
 const { businessSlug, activeBusinessId, activeBusiness } = useBusiness()
@@ -31,7 +33,7 @@ const form = reactive({
   name: '',
   description: '',
   scope_type: 'business' as 'business' | 'branch',
-  scope_id: '',
+  scope_ids: [] as string[],
   color_primary: '#6366f1',
   color_secondary: '#ffffff',
   // stamp config
@@ -49,17 +51,52 @@ const form = reactive({
 
 const submitting = ref(false)
 
-// Default scope_id to business id
-watch(() => activeBusinessId.value, (id) => {
-  if (id && form.scope_type === 'business') form.scope_id = id
-}, { immediate: true })
+const hexColor = z.string().regex(/^#[0-9a-fA-F]{6}$/, 'Warna tidak valid')
 
-watch(() => form.scope_type, (type) => {
-  if (type === 'business' && activeBusinessId.value) {
-    form.scope_id = activeBusinessId.value
-  } else {
-    form.scope_id = ''
+const tierSchema = z.object({
+  name: z.string().min(1, 'Nama tier wajib diisi'),
+  rank: z.number(),
+  cashback_percentage: z.number().min(0, 'Minimal 0').max(100, 'Maksimal 100'),
+  auto_upgrade_rule_type: z.string(),
+  auto_upgrade_threshold: z.number().positive('Harus lebih dari 0').optional(),
+  color: z.string(),
+}).refine(
+  t => t.auto_upgrade_rule_type === 'manual_only' || (t.auto_upgrade_threshold != null && t.auto_upgrade_threshold > 0),
+  { message: 'Threshold wajib diisi', path: ['auto_upgrade_threshold'] },
+)
+
+const schema = computed(() => {
+  const base: Record<string, z.ZodTypeAny> = {
+    name: z.string().min(1, 'Nama program wajib diisi').max(100, 'Nama maksimal 100 karakter'),
+    scope_type: z.enum(['business', 'branch']),
+    color_primary: hexColor,
+    color_secondary: hexColor,
   }
+
+  if (form.scope_type === 'branch') {
+    base.scope_ids = z.array(z.string().uuid()).min(1, 'Pilih minimal 1 cabang')
+  }
+
+  if (form.type === 'stamp') {
+    base.stamp_target = z.number({ error: 'Target wajib diisi' }).int().min(1, 'Minimal 1').max(30, 'Maksimal 30')
+    base.stamp_mode = z.enum(['per_transaction', 'amount_based'])
+    if (form.stamp_mode === 'amount_based') {
+      base.amount_per_stamp = z.number({ error: 'Nominal wajib diisi' }).positive('Harus lebih dari 0')
+    }
+    base.stamps_per_transaction = z.number({ error: 'Stempel per transaksi wajib diisi' }).int().min(1, 'Minimal 1')
+  }
+
+  if (form.type === 'membership') {
+    base.cashback_redemption_mode = z.enum(['transaction_deduction', 'voucher'])
+    base.tiers = z.array(tierSchema).min(1, 'Minimal 1 tier')
+  }
+
+  return z.object(base)
+})
+
+// Default scope_id to business id
+watch(() => form.scope_type, () => {
+  form.scope_ids = []
 })
 
 function addTier() {
@@ -76,29 +113,35 @@ async function handleSubmit() {
   if (!activeBusinessId.value || !form.type) return
   submitting.value = true
   try {
-    const payload: Record<string, unknown> = {
-      business_id: activeBusinessId.value,
-      type: form.type,
-      name: form.name,
-      description: form.description || undefined,
-      scope_type: form.scope_type,
-      scope_id: form.scope_id,
-      color_primary: form.color_primary,
-      color_secondary: form.color_secondary,
-    }
-    if (form.type === 'stamp') {
-      payload.stamp_config = {
-        stamp_target: form.stamp_target,
-        stamp_mode: form.stamp_mode,
-        amount_per_stamp: form.stamp_mode === 'amount_based' ? form.amount_per_stamp : undefined,
-        stamps_per_transaction: form.stamps_per_transaction,
-        reward_description: form.reward_description || undefined,
+    const scopeIds = form.scope_type === 'business'
+      ? [activeBusinessId.value!]
+      : form.scope_ids
+
+    for (const scopeId of scopeIds) {
+      const payload: Record<string, unknown> = {
+        business_id: activeBusinessId.value,
+        type: form.type,
+        name: form.name,
+        description: form.description || undefined,
+        scope_type: form.scope_type,
+        scope_id: scopeId,
+        color_primary: form.color_primary,
+        color_secondary: form.color_secondary,
       }
-    } else {
-      payload.membership_config = { cashback_redemption_mode: form.cashback_redemption_mode }
-      payload.tiers = form.tiers
+      if (form.type === 'stamp') {
+        payload.stamp_config = {
+          stamp_target: form.stamp_target,
+          stamp_mode: form.stamp_mode,
+          amount_per_stamp: form.stamp_mode === 'amount_based' ? form.amount_per_stamp : undefined,
+          stamps_per_transaction: form.stamps_per_transaction,
+          reward_description: form.reward_description || undefined,
+        }
+      } else {
+        payload.membership_config = { cashback_redemption_mode: form.cashback_redemption_mode }
+        payload.tiers = form.tiers
+      }
+      await createProgram(payload as any)
     }
-    await createProgram(payload as any)
     toast.add({ title: 'Program berhasil dibuat', color: 'success', icon: 'i-lucide-check' })
     router.push(`/dashboard/${businessSlug.value}/programs`)
   } catch (e: any) {
@@ -135,7 +178,7 @@ async function handleSubmit() {
 
     <!-- Step 2: Form -->
     <UCard v-else class="glass-card">
-      <form @submit.prevent="handleSubmit" class="space-y-3">
+      <UForm :schema="schema" :state="form" class="space-y-3" @submit="handleSubmit">
         <div class="flex items-center gap-2 mb-4">
           <UButton variant="ghost" icon="i-lucide-arrow-left" size="sm" @click="step = 1" />
           <UBadge :color="form.type === 'stamp' ? 'primary' : 'warning'" variant="soft">
@@ -144,24 +187,24 @@ async function handleSubmit() {
         </div>
 
         <!-- Base fields -->
-        <UFormField label="Nama Program" required>
+        <UFormField label="Nama Program" name="name" required>
           <UInput v-model="form.name" placeholder="contoh: Loyalty Kopi" />
         </UFormField>
-        <UFormField label="Deskripsi">
+        <UFormField label="Deskripsi" name="description">
           <UInput v-model="form.description" placeholder="Deskripsi singkat" />
         </UFormField>
-        <UFormField label="Cakupan">
+        <UFormField label="Cakupan" name="scope_type">
           <URadioGroup v-model="form.scope_type" orientation="horizontal" :items="scopeTypeItems" />
         </UFormField>
-        <UFormField v-if="form.scope_type === 'branch'" label="Pilih Cabang">
-          <USelect v-model="form.scope_id" :items="branchItems" placeholder="-- Pilih Cabang --" />
+        <UFormField v-if="form.scope_type === 'branch'" label="Pilih Cabang" name="scope_ids">
+          <USelectMenu v-model="form.scope_ids" multiple value-key="value" :items="branchItems" placeholder="-- Pilih Cabang --" />
         </UFormField>
         <div class="flex gap-4">
-          <UFormField label="Warna Utama">
-            <input v-model="form.color_primary" type="color" class="h-10 w-16 rounded border border-default cursor-pointer" />
+          <UFormField label="Warna Utama" name="color_primary">
+            <UColorPicker v-model="form.color_primary" size="sm" />
           </UFormField>
-          <UFormField label="Warna Sekunder">
-            <input v-model="form.color_secondary" type="color" class="h-10 w-16 rounded border border-default cursor-pointer" />
+          <UFormField label="Warna Sekunder" name="color_secondary">
+            <UColorPicker v-model="form.color_secondary" size="sm" />
           </UFormField>
         </div>
 
@@ -169,19 +212,19 @@ async function handleSubmit() {
         <template v-if="form.type === 'stamp'">
           <hr class="border-(--ui-border)" />
           <h3 class="text-sm font-medium">Pengaturan Stempel</h3>
-          <UFormField label="Target Stempel" required>
+          <UFormField label="Target Stempel" name="stamp_target" required>
             <UInput v-model.number="form.stamp_target" type="number" min="1" max="30" />
           </UFormField>
-          <UFormField label="Mode Stempel">
+          <UFormField label="Mode Stempel" name="stamp_mode">
             <URadioGroup v-model="form.stamp_mode" orientation="horizontal" :items="stampModeItems" />
           </UFormField>
-          <UFormField v-if="form.stamp_mode === 'amount_based'" label="Nominal per Stempel (Rp)" required>
+          <UFormField v-if="form.stamp_mode === 'amount_based'" label="Nominal per Stempel (Rp)" name="amount_per_stamp" required>
             <UInput v-model.number="form.amount_per_stamp" type="number" min="1" />
           </UFormField>
-          <UFormField v-if="form.stamp_mode === 'per_transaction'" label="Stempel per Transaksi">
+          <UFormField v-if="form.stamp_mode === 'per_transaction'" label="Stempel per Transaksi" name="stamps_per_transaction" required>
             <UInput v-model.number="form.stamps_per_transaction" type="number" min="1" />
           </UFormField>
-          <UFormField label="Deskripsi Hadiah">
+          <UFormField label="Deskripsi Hadiah" name="reward_description">
             <UInput v-model="form.reward_description" placeholder="contoh: Gratis 1 kopi" />
           </UFormField>
         </template>
@@ -190,7 +233,7 @@ async function handleSubmit() {
         <template v-if="form.type === 'membership'">
           <hr class="border-(--ui-border)" />
           <h3 class="text-sm font-medium">Pengaturan Membership</h3>
-          <UFormField label="Mode Cashback">
+          <UFormField label="Mode Cashback" name="cashback_redemption_mode">
             <URadioGroup v-model="form.cashback_redemption_mode" orientation="horizontal" :items="cashbackModeItems" />
           </UFormField>
 
@@ -201,17 +244,17 @@ async function handleSubmit() {
               <UButton v-if="form.tiers.length > 1" variant="ghost" color="error" icon="i-lucide-trash-2" size="xs" @click="removeTier(i)" />
             </div>
             <div class="grid grid-cols-2 gap-3">
-              <UFormField label="Nama">
+              <UFormField label="Nama" :name="`tiers.${i}.name`">
                 <UInput v-model="tier.name" placeholder="Bronze" />
               </UFormField>
-              <UFormField label="Cashback (%)">
+              <UFormField label="Cashback (%)" :name="`tiers.${i}.cashback_percentage`">
                 <UInput v-model.number="tier.cashback_percentage" type="number" min="0" max="100" step="0.1" />
               </UFormField>
             </div>
-            <UFormField label="Auto Upgrade">
+            <UFormField label="Auto Upgrade" :name="`tiers.${i}.auto_upgrade_rule_type`">
               <USelect v-model="tier.auto_upgrade_rule_type" :items="upgradeRuleItems" />
             </UFormField>
-            <UFormField v-if="tier.auto_upgrade_rule_type !== 'manual_only'" label="Threshold">
+            <UFormField v-if="tier.auto_upgrade_rule_type !== 'manual_only'" label="Threshold" :name="`tiers.${i}.auto_upgrade_threshold`">
               <UInput v-model.number="tier.auto_upgrade_threshold" type="number" min="1" />
             </UFormField>
           </div>
@@ -224,7 +267,7 @@ async function handleSubmit() {
           </NuxtLink>
           <UButton type="submit" :loading="submitting">Buat Program</UButton>
         </div>
-      </form>
+      </UForm>
     </UCard>
   </div>
 </template>

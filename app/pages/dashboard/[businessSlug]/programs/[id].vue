@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { z } from 'zod'
+
 definePageMeta({ layout: 'dashboard' })
 const route = useRoute()
 const router = useRouter()
@@ -20,6 +22,24 @@ const loading = ref(true)
 const submitting = ref(false)
 const error = ref('')
 const qrOpen = ref(false)
+
+const hexColor = z.string().regex(/^#[0-9a-fA-F]{6}$/, 'Warna tidak valid')
+
+const schema = computed(() => {
+  const base: Record<string, z.ZodTypeAny> = {
+    name: z.string().min(1, 'Nama program wajib diisi').max(100, 'Nama maksimal 100 karakter'),
+    scope_type: z.enum(['business', 'branch']),
+    color_primary: hexColor,
+    color_secondary: hexColor,
+    is_active: z.boolean(),
+  }
+
+  if (form.scope_type === 'branch') {
+    base.scope_id = z.string().min(1, 'Pilih cabang')
+  }
+
+  return z.object(base)
+})
 
 const form = reactive({
   name: '',
@@ -100,28 +120,28 @@ async function handleDelete() {
         <UButton icon="i-lucide-qr-code" variant="outline" size="sm" @click="qrOpen = true">QR Code</UButton>
       </div>
 
-      <form @submit.prevent="handleSubmit" class="space-y-3">
-        <UFormField label="Nama Program" required>
+      <UForm :schema="schema" :state="form" class="space-y-3" @submit="handleSubmit">
+        <UFormField label="Nama Program" name="name" required>
           <UInput v-model="form.name" />
         </UFormField>
-        <UFormField label="Deskripsi">
+        <UFormField label="Deskripsi" name="description">
           <UInput v-model="form.description" />
         </UFormField>
-        <UFormField label="Cakupan">
+        <UFormField label="Cakupan" name="scope_type">
           <URadioGroup v-model="form.scope_type" orientation="horizontal" :items="scopeTypeItems" />
         </UFormField>
-        <UFormField v-if="form.scope_type === 'branch'" label="Pilih Cabang">
+        <UFormField v-if="form.scope_type === 'branch'" label="Pilih Cabang" name="scope_id">
           <USelect v-model="form.scope_id" :items="branchItems" placeholder="-- Pilih Cabang --" />
         </UFormField>
         <div class="flex gap-4">
-          <UFormField label="Warna Utama">
-            <input v-model="form.color_primary" type="color" class="h-10 w-16 rounded border border-default cursor-pointer" />
+          <UFormField label="Warna Utama" name="color_primary">
+            <UColorPicker v-model="form.color_primary" size="sm" />
           </UFormField>
-          <UFormField label="Warna Sekunder">
-            <input v-model="form.color_secondary" type="color" class="h-10 w-16 rounded border border-default cursor-pointer" />
+          <UFormField label="Warna Sekunder" name="color_secondary">
+            <UColorPicker v-model="form.color_secondary" size="sm" />
           </UFormField>
         </div>
-        <UFormField label="Status">
+        <UFormField label="Status" name="is_active">
           <USwitch v-model="form.is_active" label="Aktif" />
         </UFormField>
 
@@ -150,7 +170,7 @@ async function handleDelete() {
           <UButton type="submit" :loading="submitting">Simpan</UButton>
           <UButton v-if="canDelete" variant="outline" color="error" type="button" @click="handleDelete">Hapus</UButton>
         </div>
-      </form>
+      </UForm>
     </UCard>
 
     <div v-else class="text-center py-8">
