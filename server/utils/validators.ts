@@ -1,0 +1,126 @@
+import { z } from 'zod'
+
+export const businessSchema = z.object({
+  name: z.string().min(1).max(100),
+  slug: z.string().min(1).max(50).regex(/^[a-z0-9-]+$/),
+  phone: z.string().optional(),
+  email: z.string().email().optional(),
+  address: z.string().optional(),
+})
+
+export const branchSchema = z.object({
+  business_id: z.string().uuid(),
+  name: z.string().min(1).max(100),
+  slug: z.string().min(1).max(50).regex(/^[a-z0-9-]+$/),
+  phone: z.string().optional(),
+  email: z.string().email().optional(),
+  address: z.string().optional(),
+  latitude: z.number().min(-90).max(90).optional(),
+  longitude: z.number().min(-180).max(180).optional(),
+})
+
+export const memberSchema = z.object({
+  auth_user_id: z.string().uuid(),
+  role: z.enum(['owner', 'admin', 'cashier']),
+  scope_type: z.enum(['business', 'branch']),
+  scope_id: z.string().uuid(),
+})
+
+export const programBaseSchema = z.object({
+  business_id: z.string().uuid(),
+  type: z.enum(['stamp', 'membership']),
+  name: z.string().min(1).max(100),
+  description: z.string().optional(),
+  scope_type: z.enum(['business', 'branch']),
+  scope_id: z.string().uuid(),
+  color_primary: z.string().regex(/^#[0-9a-fA-F]{6}$/).default('#6366f1'),
+  color_secondary: z.string().regex(/^#[0-9a-fA-F]{6}$/).default('#ffffff'),
+})
+
+export const stampConfigSchema = z.object({
+  stamp_target: z.number().int().min(1).max(30),
+  stamp_mode: z.enum(['per_transaction', 'amount_based']),
+  amount_per_stamp: z.number().positive().optional(),
+  stamps_per_transaction: z.number().int().positive().default(1),
+  reward_description: z.string().optional(),
+})
+
+export const membershipConfigSchema = z.object({
+  cashback_redemption_mode: z.enum(['transaction_deduction', 'voucher']),
+})
+
+export const tierSchema = z.object({
+  name: z.string().min(1).max(50),
+  rank: z.number().int().positive(),
+  cashback_percentage: z.number().min(0).max(100),
+  auto_upgrade_rule_type: z.enum(['total_spend', 'transaction_count', 'manual_only']),
+  auto_upgrade_threshold: z.number().positive().optional(),
+  color: z.string().regex(/^#[0-9a-fA-F]{6}$/).optional(),
+})
+
+export const voucherOptionSchema = z.object({
+  name: z.string().min(1).max(100),
+  description: z.string().optional(),
+  cashback_cost: z.number().positive(),
+  expiry_days: z.number().int().positive(),
+  image_url: z.string().url().optional(),
+})
+
+export const customerRegisterSchema = z.object({
+  phone: z.string().regex(/^(?:\+62|62|0)[2-9]\d{7,11}$/),
+  name: z.string().min(1).max(100),
+  email: z.string().email().optional(),
+  gender: z.enum(['male', 'female', 'other']).optional(),
+  program_id: z.string().uuid(),
+})
+
+export const phoneSchema = z.string().regex(/^(?:\+62|62|0)[2-9]\d{7,11}$/)
+
+// Transaction request schemas
+export const stampAddSchema = z.object({
+  customer_program_id: z.string().uuid(),
+  branch_id: z.string().uuid(),
+  transaction_amount: z.number().positive().optional(),
+  stamps_count: z.number().int().positive().optional(),
+  notes: z.string().optional(),
+})
+
+export const stampRedeemSchema = z.object({
+  customer_program_id: z.string().uuid(),
+  branch_id: z.string().uuid(),
+  notes: z.string().optional(),
+})
+
+export const cashbackEarnSchema = z.object({
+  customer_program_id: z.string().uuid(),
+  branch_id: z.string().uuid(),
+  transaction_amount: z.number().positive(),
+  notes: z.string().optional(),
+})
+
+export const cashbackRedeemSchema = z.object({
+  customer_program_id: z.string().uuid(),
+  branch_id: z.string().uuid(),
+  amount: z.number().positive(),
+  notes: z.string().optional(),
+})
+
+export const tierUpgradeSchema = z.object({
+  customer_program_id: z.string().uuid(),
+  target_tier_id: z.string().uuid(),
+  notes: z.string().optional(),
+})
+
+export const voucherGenerateSchema = z.object({
+  customer_program_id: z.string().uuid(),
+  voucher_option_id: z.string().uuid(),
+  qr_token: z.string().min(1),
+})
+
+// Phone normalization
+export function normalizePhone(phone: string): string {
+  if (phone.startsWith('+62')) return phone
+  if (phone.startsWith('62')) return '+' + phone
+  if (phone.startsWith('0')) return '+62' + phone.slice(1)
+  return phone
+}

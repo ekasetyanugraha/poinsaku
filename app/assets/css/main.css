@@ -1,0 +1,152 @@
+@import "tailwindcss";
+@import '@nuxt/ui';
+
+/* Override Tailwind Preflight's cursor:default on interactive elements */
+@layer base {
+  a, button, [role="button"] {
+    cursor: pointer;
+  }
+}
+
+/* Custom font families */
+@theme {
+  --font-sans: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-heading: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Pulse border animation for QR code section */
+@keyframes pulse-border {
+  0%, 100% {
+    box-shadow: 0 0 0 0 oklch(from var(--ui-primary) l c h / 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 6px oklch(from var(--ui-primary) l c h / 0);
+  }
+}
+.animate-pulse-border {
+  animation: pulse-border 2s ease-in-out infinite;
+}
+
+/* Subtle confetti-like floating particles */
+@keyframes confetti-float {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(-60px) rotate(360deg); opacity: 0; }
+}
+.animate-confetti-1 { animation: confetti-float 1.8s ease-out forwards; }
+.animate-confetti-2 { animation: confetti-float 2.2s ease-out 0.15s forwards; }
+.animate-confetti-3 { animation: confetti-float 2s ease-out 0.3s forwards; }
+.animate-confetti-4 { animation: confetti-float 1.6s ease-out 0.1s forwards; }
+.animate-confetti-5 { animation: confetti-float 2.4s ease-out 0.25s forwards; }
+.animate-confetti-6 { animation: confetti-float 1.9s ease-out 0.2s forwards; }
+
+/* Pulse badge animation */
+@keyframes pulse-badge {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+.animate-pulse-badge {
+  animation: pulse-badge 2s ease-in-out infinite;
+}
+
+/* Scan line animation for camera viewfinder */
+@keyframes scan-line {
+  0%, 100% { top: 25%; }
+  50% { top: 70%; }
+}
+.animate-scan-line {
+  animation: scan-line 2.5s ease-in-out infinite;
+}
+
+/* Corner bracket animation */
+@keyframes corner-pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+.animate-corner-pulse {
+  animation: corner-pulse 2s ease-in-out infinite;
+}
+
+/* Glass design tokens — auto-switch between light/dark */
+:root {
+  --glass-bg: rgb(255 255 255 / 0.7);
+  --glass-border: rgb(255 255 255 / 0.2);
+  --glass-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+
+  --glass-subtle-bg: rgb(255 255 255 / 0.5);
+  --glass-subtle-border: rgb(255 255 255 / 0.15);
+
+  --glass-card-bg: rgb(255 255 255 / 0.55);
+  --glass-card-border: rgb(255 255 255 / 0.18);
+  --glass-card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.06), 0 2px 4px -2px rgb(0 0 0 / 0.06);
+
+  --glass-sidebar-bg: rgb(255 255 255 / 0.65);
+  --glass-sidebar-border: rgb(255 255 255 / 0.2);
+}
+
+.dark {
+  --glass-bg: rgb(15 23 42 / 0.6);
+  --glass-border: rgb(255 255 255 / 0.08);
+  --glass-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.2);
+
+  --glass-subtle-bg: rgb(15 23 42 / 0.4);
+  --glass-subtle-border: rgb(255 255 255 / 0.06);
+
+  --glass-card-bg: rgb(15 23 42 / 0.45);
+  --glass-card-border: rgb(255 255 255 / 0.07);
+  --glass-card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.15), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+
+  --glass-sidebar-bg: rgb(15 23 42 / 0.55);
+  --glass-sidebar-border: rgb(255 255 255 / 0.06);
+}
+
+/* Glass utility classes */
+@utility glass {
+  background-color: var(--glass-bg);
+  backdrop-filter: blur(24px);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+@utility glass-subtle {
+  background-color: var(--glass-subtle-bg);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-subtle-border);
+}
+
+@utility glass-card {
+  background-color: var(--color-white);
+  border: 1px solid var(--color-gray-200);
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+
+:root.dark .glass-card,
+.dark .glass-card {
+  background-color: var(--color-gray-900);
+  border-color: var(--color-gray-800);
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.2);
+}
+
+@utility glass-sidebar {
+  background-color: var(--glass-sidebar-bg);
+  backdrop-filter: blur(20px);
+  border-right: 1px solid var(--glass-sidebar-border);
+}
+
+/* Gradient mesh background for dashboard/content areas */
+@utility gradient-mesh {
+  background:
+    radial-gradient(ellipse at 20% 50%, oklch(from var(--ui-primary) l c h / 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, oklch(from var(--ui-primary) l c h / 0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 60% 80%, rgb(6 182 212 / 0.06) 0%, transparent 50%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
