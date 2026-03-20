@@ -119,6 +119,36 @@ export const voucherGenerateSchema = z.object({
   qr_token: z.string().min(1),
 })
 
+// --- Staff Management Schemas (Phase 2) ---
+
+export const createStaffSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8).regex(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/,
+    'Password must be at least 8 characters with uppercase, lowercase, and number',
+  ),
+  display_name: z.string().max(100).optional(),
+  role: z.enum(['admin', 'cashier']),
+  scope_type: z.enum(['business', 'branch']),
+  scope_id: z.string().uuid(),
+})
+
+export const resetPasswordSchema = z.object({
+  password: z.string().min(8).regex(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/,
+    'Password must be at least 8 characters with uppercase, lowercase, and number',
+  ),
+})
+
+export const updateStatusSchema = z.object({
+  action: z.enum(['deactivate', 'reactivate']),
+})
+
+export const reassignBranchSchema = z.object({
+  scope_type: z.enum(['business', 'branch']),
+  scope_id: z.string().uuid(),
+})
+
 // Phone normalization
 export function normalizePhone(phone: string): string {
   if (phone.startsWith('+62')) return phone
