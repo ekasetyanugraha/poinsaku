@@ -1,6 +1,6 @@
-import { resetPasswordSchema } from '~/server/utils/validators'
-import { getServiceClient, updateAuthUserPassword } from '~/server/utils/supabase'
-import { requireOwner } from '~/server/utils/auth'
+import { resetPasswordSchema } from '#server/utils/validators'
+import { getServiceClient, updateAuthUserPassword } from '#server/utils/supabase'
+import { requireOwner } from '#server/utils/auth'
 
 export default defineEventHandler(async (event) => {
   // 1. Get member ID from route param

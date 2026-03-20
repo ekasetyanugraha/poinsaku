@@ -4,6 +4,15 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   devServer: { port: 8989 },
 
+  vite: {
+    optimizeDeps: {
+      include: [
+        'date-fns',
+        'date-fns/locale'
+      ],
+    },
+  },
+
   modules: [
     '@nuxtjs/supabase',
     '@nuxt/ui',

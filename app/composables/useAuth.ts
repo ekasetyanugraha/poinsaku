@@ -1,16 +1,13 @@
 export function useAuth() {
   const user = useSupabaseUser()
-  const { activeBusinessId } = useBusiness()
 
-  const { data: currentMember, refresh: refreshMember, status } = useFetch('/api/members/me', {
-    query: computed(() => ({ business_id: activeBusinessId.value })),
-    watch: [activeBusinessId],
+  const { data: currentMember, refresh: refreshMember, status } = useFetch('/api/staff/me', {
     immediate: false,
   })
 
-  // Auto-fetch when we have both user and business context
-  watch([user, activeBusinessId], ([u, bid]) => {
-    if (u && bid) refreshMember()
+  // Auto-fetch when user is available
+  watch(user, (u) => {
+    if (u) refreshMember()
   }, { immediate: true })
 
   const role = computed(() => (currentMember.value as any)?.role ?? null)

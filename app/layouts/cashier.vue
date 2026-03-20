@@ -1,3 +1,8 @@
+<script setup lang="ts">
+const { role } = useAuth()
+const isCashier = computed(() => role.value === 'cashier')
+</script>
+
 <template>
   <div class="min-h-screen bg-default relative overflow-hidden">
     <!-- Decorative gradient orbs -->
@@ -9,11 +14,13 @@
     <header class="glass shadow-sm">
       <div class="flex h-14 items-center justify-between px-4">
         <div class="flex items-center gap-3">
-          <NuxtLink to="/dashboard/business" class="flex items-center gap-1.5 text-sm text-muted hover:text-default transition-colors cursor-pointer">
-            <UIcon name="i-lucide-arrow-left" class="size-4" />
-            <span>Dashboard</span>
-          </NuxtLink>
-          <span class="text-(--ui-text-muted)/40">|</span>
+          <template v-if="!isCashier">
+            <NuxtLink to="/dashboard/business" class="flex items-center gap-1.5 text-sm text-muted hover:text-default transition-colors cursor-pointer">
+              <UIcon name="i-lucide-arrow-left" class="size-4" />
+              <span>Dashboard</span>
+            </NuxtLink>
+            <span class="text-(--ui-text-muted)/40">|</span>
+          </template>
           <div class="flex items-center gap-2 text-primary">
             <UIcon name="i-lucide-scan-line" class="size-4.5" />
             <span class="font-heading font-bold">Mode Kasir</span>

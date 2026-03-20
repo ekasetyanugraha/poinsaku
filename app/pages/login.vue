@@ -63,6 +63,29 @@ async function handleLogin() {
     return
   }
 
-  router.push('/dashboard/business')
+  // Fetch member record for role-based redirect
+  try {
+    const member = await $fetch('/api/staff/me') as any
+
+    if (member.role === 'cashier') {
+      router.push('/cashier')
+    } else {
+      router.push(`/dashboard/${member.businessSlug}`)
+    }
+  } catch {
+    // Fallback: fetch businesses list for owners without member lookup
+    try {
+      const businesses = await $fetch('/api/businesses') as any[]
+      if (businesses?.length > 0) {
+        router.push(`/dashboard/${businesses[0].slug}`)
+      } else {
+        router.push('/dashboard')
+      }
+    } catch {
+      errorMsg.value = 'Gagal memuat data akun. Coba lagi.'
+      await supabase.auth.signOut()
+      loading.value = false
+    }
+  }
 }
 </script>

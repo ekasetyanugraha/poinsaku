@@ -6,7 +6,7 @@ export function useBranch() {
     watch: [activeBusinessId],
   })
 
-  const branches = computed(() => (branchesData.value as any)?.data ?? [])
+  const branches = computed(() => (branchesData.value as any) ?? [])
 
   async function createBranch(data: { name: string; slug: string; business_id: string; phone?: string; email?: string; address?: string; latitude?: number; longitude?: number }) {
     const result = await $fetch('/api/branches', { method: 'POST', body: data })

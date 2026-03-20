@@ -68,10 +68,32 @@
 
           <!-- Logout -->
           <div class="px-3 py-2 mt-auto shrink-0 border-t border-gray-100 dark:border-gray-800">
-            <button class="flex w-full items-center gap-2.5 rounded-md px-2.5 py-1.5 text-[13px] font-medium text-muted hover:bg-accented transition-colors cursor-pointer" @click="handleLogout">
-              <UIcon name="i-lucide-log-out" class="size-4" />
-              Keluar
-            </button>
+            <UModal v-model:open="logoutModalOpen">
+              <button class="flex w-full items-center gap-2.5 rounded-md px-2.5 py-1.5 text-[13px] font-medium text-muted hover:bg-accented transition-colors cursor-pointer" @click="sidebarOpen = false">
+                <UIcon name="i-lucide-log-out" class="size-4" />
+                Keluar
+              </button>
+
+              <template #content>
+                <div class="p-6 text-center space-y-4">
+                  <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-500/10">
+                    <UIcon name="i-lucide-log-out" class="size-6 text-red-500" />
+                  </div>
+                  <div class="space-y-1">
+                    <h3 class="text-lg font-semibold">Keluar dari Akun?</h3>
+                    <p class="text-sm text-(--ui-text-muted)">Anda perlu masuk kembali untuk mengakses dashboard.</p>
+                  </div>
+                  <div class="flex flex-col gap-2 pt-2">
+                    <UButton to="/logout" color="error" class="w-full cursor-pointer" block>
+                      Ya, Keluar
+                    </UButton>
+                    <UButton color="neutral" variant="ghost" class="w-full cursor-pointer" block @click="logoutModalOpen = false">
+                      Batal
+                    </UButton>
+                  </div>
+                </div>
+              </template>
+            </UModal>
           </div>
         </aside>
 
@@ -101,7 +123,7 @@
 <script setup lang="ts">
 const sidebarOpen = ref(false)
 const switcherOpen = ref(false)
-const supabase = useSupabaseClient()
+const logoutModalOpen = ref(false)
 const router = useRouter()
 const route = useRoute()
 
@@ -140,8 +162,5 @@ function handleSwitch(slug: string) {
   router.push(`/dashboard/${slug}`)
 }
 
-async function handleLogout() {
-  await supabase.auth.signOut()
-  router.push('/login')
-}
+
 </script>

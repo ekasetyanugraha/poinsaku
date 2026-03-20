@@ -8,7 +8,7 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "db:migrate": "supabase migrate up",
+    "db:migrate": "supabase migration up",
     "db:gen-types": "supabase gen types --lang=typescript > ./app/types/database.types.ts",
     "test": "vitest run --reporter=verbose"
   },

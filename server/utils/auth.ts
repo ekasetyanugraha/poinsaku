@@ -48,6 +48,7 @@ export async function requireMember(
   const db = getServiceClient(event)
 
   // First check for a direct business-scoped membership
+  // First check for a direct business-scoped membership
   const { data: bizMember } = await db
     .from('members')
     .select('id, auth_user_id, role, scope_type, scope_id, is_active, display_name')
