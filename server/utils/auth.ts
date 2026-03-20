@@ -27,6 +27,8 @@ export interface MemberAccess {
   scopeId: string
   businessId: string
   branchId: string | null
+  isActive: boolean
+  displayName: string | null
 }
 
 /**
@@ -48,7 +50,7 @@ export async function requireMember(
   // First check for a direct business-scoped membership
   const { data: bizMember } = await db
     .from('members')
-    .select('id, auth_user_id, role, scope_type, scope_id')
+    .select('id, auth_user_id, role, scope_type, scope_id, is_active, display_name')
     .eq('auth_user_id', user.id)
     .eq('scope_type', 'business')
     .eq('scope_id', businessId)
@@ -67,7 +69,7 @@ export async function requireMember(
       const branchIds = branches.map(b => b.id)
       const { data: branchMember } = await db
         .from('members')
-        .select('id, auth_user_id, role, scope_type, scope_id')
+        .select('id, auth_user_id, role, scope_type, scope_id, is_active, display_name')
         .eq('auth_user_id', user.id)
         .eq('scope_type', 'branch')
         .in('scope_id', branchIds)
@@ -82,6 +84,10 @@ export async function requireMember(
     throw createError({ statusCode: 403, message: 'Forbidden' })
   }
 
+  if (!member.is_active) {
+    throw createError({ statusCode: 403, message: 'Akun Anda telah dinonaktifkan. Hubungi pemilik bisnis.' })
+  }
+
   if (opts?.roles && !opts.roles.includes(member.role as MemberAccess['role'])) {
     throw createError({ statusCode: 403, message: 'Forbidden' })
   }
@@ -94,6 +100,8 @@ export async function requireMember(
     scopeId: member.scope_id as string,
     businessId,
     branchId: member.scope_type === 'branch' ? (member.scope_id as string) : null,
+    isActive: member.is_active as boolean,
+    displayName: (member.display_name as string | null) ?? null,
   }
 }
 
