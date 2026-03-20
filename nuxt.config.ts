@@ -16,7 +16,7 @@ export default defineNuxtConfig({
       login: '/login',
       callback: '/confirm',
       include: ['/dashboard(/*)?', '/cashier(/*)?'],
-      exclude: ['/', '/join/*', '/card/*'],
+      exclude: ['/', '/join/*', '/card/*', '/staff/login'],
     },
   },
 
