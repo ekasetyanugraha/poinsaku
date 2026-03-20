@@ -47,3 +47,51 @@ export async function createAuthUser(
 
   return data.user
 }
+
+/**
+ * Delete a Supabase Auth user via the admin API (service role).
+ * Hard delete — email becomes immediately re-usable.
+ */
+export async function deleteAuthUser(event: H3Event, authUserId: string): Promise<void> {
+  const client = getServiceClient(event)
+  const { error } = await client.auth.admin.deleteUser(authUserId)
+  if (error) {
+    throw createError({ statusCode: 500, message: 'Gagal menghapus akun auth.' })
+  }
+}
+
+/**
+ * Update a Supabase Auth user's password via the admin API (service role).
+ */
+export async function updateAuthUserPassword(event: H3Event, authUserId: string, password: string): Promise<void> {
+  const client = getServiceClient(event)
+  const { error } = await client.auth.admin.updateUserById(authUserId, { password })
+  if (error) {
+    throw createError({ statusCode: 500, message: 'Gagal memperbarui password.' })
+  }
+}
+
+/**
+ * Ban a Supabase Auth user (deactivate) via the admin API (service role).
+ * Uses ban_duration: '87600h' (10 years) as project-decided constant.
+ */
+export async function banAuthUser(event: H3Event, authUserId: string): Promise<void> {
+  const client = getServiceClient(event)
+  const { error } = await client.auth.admin.updateUserById(authUserId, { ban_duration: '87600h' })
+  if (error) {
+    throw createError({ statusCode: 500, message: 'Gagal menonaktifkan akun.' })
+  }
+}
+
+/**
+ * Unban a Supabase Auth user (reactivate) via the admin API (service role).
+ * Uses ban_duration: 'none' — the documented way to lift a ban.
+ * Do NOT use '0s' or '' — those do not unban correctly.
+ */
+export async function unbanAuthUser(event: H3Event, authUserId: string): Promise<void> {
+  const client = getServiceClient(event)
+  const { error } = await client.auth.admin.updateUserById(authUserId, { ban_duration: 'none' })
+  if (error) {
+    throw createError({ statusCode: 500, message: 'Gagal mengaktifkan akun.' })
+  }
+}
