@@ -24,10 +24,10 @@ Requirements for this milestone. Each maps to roadmap phases.
 
 ### Staff Display
 
-- [ ] **DISP-01**: Members list shows email and display name instead of raw UUIDs
+- [x] **DISP-01**: Members list shows email and display name instead of raw UUIDs
 - [ ] **DISP-02**: Members list shows active/inactive status badge per member
 - [ ] **DISP-03**: Members list shows role and branch scope per member
-- [ ] **DISP-04**: Members list shows last login time per staff member
+- [x] **DISP-04**: Members list shows last login time per staff member
 
 ### Staff Authentication
 
@@ -82,10 +82,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | MGMT-03 | Phase 2 | Complete |
 | MGMT-04 | Phase 2 | Complete |
 | MGMT-05 | Phase 2 | Complete |
-| DISP-01 | Phase 3 | Pending |
+| DISP-01 | Phase 3 | Complete |
 | DISP-02 | Phase 3 | Pending |
 | DISP-03 | Phase 3 | Pending |
-| DISP-04 | Phase 3 | Pending |
+| DISP-04 | Phase 3 | Complete |
 | AUTH-01 | Phase 3 | Pending |
 | AUTH-02 | Phase 3 | Pending |
 | AUTH-03 | Phase 3 | Pending |

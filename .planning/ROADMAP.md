@@ -58,7 +58,7 @@ Plans:
   3. An owner can create a new staff account through a form on the members page (email, password, display name, role, branch) without leaving the page
   4. An owner can deactivate, reactivate, reset password, reassign branch, or delete a staff member from the members page using per-row action controls
   5. Staff navigate to `/staff/login` to sign in; after authentication, cashiers land on `/cashier` and admins land on `/dashboard/[slug]`; staff have no access to a password change UI
-**Plans:** 3 plans
+**Plans:** 1/3 plans executed
 
 Plans:
 - [ ] 03-01-PLAN.md — GET /api/staff endpoint with auth enrichment, GET /api/staff/me endpoint, useStaff composable
@@ -74,4 +74,4 @@ Phases execute in numeric order: 1 → 2 → 3
 |-------|----------------|--------|-----------|
 | 1. Foundation | 1/1 | Complete   | 2026-03-20 |
 | 2. Server API | 3/3 | Complete   | 2026-03-20 |
-| 3. Client Layer | 0/3 | Not started | - |
+| 3. Client Layer | 1/3 | In Progress|  |
