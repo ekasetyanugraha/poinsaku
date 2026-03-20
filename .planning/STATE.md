@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 02-server-api-03-PLAN.md
-last_updated: "2026-03-20T07:17:38.279Z"
+stopped_at: Completed 02-server-api-02-PLAN.md
+last_updated: "2026-03-20T07:19:47.458Z"
 progress:
   total_phases: 3
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 4
-  completed_plans: 3
+  completed_plans: 4
 ---
 
 # Project State
@@ -49,6 +49,7 @@ Plan: 3 of 3 (COMPLETE)
 | Phase 01-foundation P01 | 2 | 3 tasks | 5 files |
 | Phase 02-server-api P01 | 3m | 3 tasks | 5 files |
 | Phase 02-server-api P03 | 2m | 2 tasks | 3 files |
+| Phase 02-server-api P02 | 3 | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -70,6 +71,8 @@ Recent decisions affecting current work:
 - [Phase 02-server-api]: createStaffSchema role enum excludes 'owner' — only admin and cashier can be created through staff endpoints
 - [Phase 02-server-api]: Partial failure on status change returns success+warning (auth ban/unban is the stronger protection; DB state can be repaired by retry)
 - [Phase 02-server-api]: Branch reassignment validates new scope belongs to same business before updating — prevents cross-business scope assignment
+- [Phase 02-server-api]: No explicit imports in server API files — Nitro auto-imports server/utils/* (confirmed via nitro-imports.d.ts)
+- [Phase 02-server-api]: DELETE order: member row deleted before auth user so orphan auth user has no business access if auth delete fails
 
 ### Pending Todos
 
@@ -83,6 +86,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-20T07:17:38.277Z
-Stopped at: Completed 02-server-api-03-PLAN.md
+Last session: 2026-03-20T07:19:47.455Z
+Stopped at: Completed 02-server-api-02-PLAN.md
 Resume file: None

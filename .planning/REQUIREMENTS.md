@@ -19,7 +19,7 @@ Requirements for this milestone. Each maps to roadmap phases.
 - [x] **MGMT-01**: Owner can reset a staff member's password
 - [x] **MGMT-02**: Owner can deactivate a staff account (suspend login without deleting)
 - [x] **MGMT-03**: Owner can reactivate a deactivated staff account
-- [ ] **MGMT-04**: Owner can permanently delete a staff account
+- [x] **MGMT-04**: Owner can permanently delete a staff account
 - [x] **MGMT-05**: Owner can reassign a staff member to a different branch
 
 ### Staff Display
@@ -80,7 +80,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | MGMT-01 | Phase 2 | Complete |
 | MGMT-02 | Phase 2 | Complete |
 | MGMT-03 | Phase 2 | Complete |
-| MGMT-04 | Phase 2 | Pending |
+| MGMT-04 | Phase 2 | Complete |
 | MGMT-05 | Phase 2 | Complete |
 | DISP-01 | Phase 3 | Pending |
 | DISP-02 | Phase 3 | Pending |
