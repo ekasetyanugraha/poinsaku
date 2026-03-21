@@ -38,15 +38,13 @@ created: 2026-03-21
 
 | Task ID | Plan | Wave | Requirement | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|-----------|-------------------|-------------|--------|
-| 04-01-01 | 01 | 1 | normalizePhone coverage | unit | `npm test` | ❌ W0 | ⬜ pending |
-| 04-01-02 | 01 | 1 | customerLookupSchema validation | unit | `npm test` | ❌ W0 | ⬜ pending |
-| 04-01-03 | 01 | 1 | stamp preview calculation | unit | `npm test` | ❌ W0 | ⬜ pending |
-| 04-02-01 | 02 | 1 | lookup endpoint returns correct shape | integration | `npm test` | ❌ W0 | ⬜ pending |
-| 04-02-02 | 02 | 1 | lookup filters active stamp programs only | integration | `npm test` | ❌ W0 | ⬜ pending |
-| 04-03-01 | 03 | 2 | phone search UI renders | manual | visual check | N/A | ⬜ pending |
-| 04-03-02 | 03 | 2 | stamp add via phone lookup works end-to-end | manual | visual check | N/A | ⬜ pending |
+| 04-01-01 | 01 | 1 | normalizePhone coverage | unit | `npm test` | W0 | pending |
+| 04-01-02 | 01 | 1 | customerLookupSchema + stampPreview | unit | `npm test` | W0 | pending |
+| 04-02-01 | 02 | 2 | phone lookup script logic + redemption guard | integration | `npm test` | N/A | pending |
+| 04-02-02 | 02 | 2 | phone search template + program picker + amount input | manual | visual check | N/A | pending |
+| 04-02-03 | 02 | 2 | end-to-end phone lookup verification | manual | visual check | N/A | pending |
 
-*Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
+*Status: pending / green / red / flaky*
 
 ---
 
@@ -68,6 +66,7 @@ created: 2026-03-21
 | Multi-program picker display | UX flow | Interactive UI state | 1. Lookup customer with 2+ stamp programs 2. Verify program list displays 3. Select one, verify customer view loads |
 | Amount-based stamp preview | Real-time calculation | Client-side computed display | 1. Select amount_based program 2. Enter Rp amount 3. Verify "= N stempel" preview updates live |
 | Full reset after stamp add | Post-action cleanup | End-to-end state reset | 1. Complete stamp add via phone lookup 2. Verify return to scan state 3. Verify phone input cleared |
+| Redemption hidden for phone lookup | Security constraint | UI guard behavior | 1. Lookup customer via phone with redeemable stamps 2. Verify Tukarkan Hadiah button NOT shown 3. Scan same customer via QR 4. Verify Tukarkan Hadiah button IS shown |
 
 ---
 
