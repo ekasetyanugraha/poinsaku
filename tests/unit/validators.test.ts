@@ -4,6 +4,8 @@ import {
   resetPasswordSchema,
   updateStatusSchema,
   reassignBranchSchema,
+  normalizePhone,
+  customerLookupSchema,
 } from '../../server/utils/validators'
 
 const VALID_UUID = '550e8400-e29b-41d4-a716-446655440000'
@@ -195,5 +197,38 @@ describe('reassignBranchSchema', () => {
       scope_id: 'not-a-uuid',
     })
     expect(result.success).toBe(false)
+  })
+})
+
+describe('normalizePhone', () => {
+  it('passes through +62 prefix unchanged', () => {
+    expect(normalizePhone('+628123456789')).toBe('+628123456789')
+  })
+  it('converts 62 prefix to +62', () => {
+    expect(normalizePhone('628123456789')).toBe('+628123456789')
+  })
+  it('converts 0 prefix to +62', () => {
+    expect(normalizePhone('08123456789')).toBe('+628123456789')
+  })
+  it('passes through unrecognized format', () => {
+    expect(normalizePhone('123')).toBe('123')
+  })
+})
+
+describe('customerLookupSchema', () => {
+  it('accepts valid phone 08xxx', () => {
+    expect(customerLookupSchema.safeParse({ phone: '08123456789' }).success).toBe(true)
+  })
+  it('accepts valid phone +62xxx', () => {
+    expect(customerLookupSchema.safeParse({ phone: '+628123456789' }).success).toBe(true)
+  })
+  it('rejects empty phone', () => {
+    expect(customerLookupSchema.safeParse({ phone: '' }).success).toBe(false)
+  })
+  it('rejects non-Indonesian format', () => {
+    expect(customerLookupSchema.safeParse({ phone: '12345' }).success).toBe(false)
+  })
+  it('rejects missing phone', () => {
+    expect(customerLookupSchema.safeParse({}).success).toBe(false)
   })
 })
