@@ -1,0 +1,51 @@
+name: Deploy to Cloudflare Pages
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Build
+        run: npm run build:cf
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          NUXT_PUBLIC_APP_URL: ${{ secrets.NUXT_PUBLIC_APP_URL }}
+          NUXT_QR_TOKEN_SECRET: ${{ secrets.NUXT_QR_TOKEN_SECRET }}
+          NUXT_APPLE_PASS_TYPE_ID: ${{ secrets.NUXT_APPLE_PASS_TYPE_ID }}
+          NUXT_APPLE_TEAM_ID: ${{ secrets.NUXT_APPLE_TEAM_ID }}
+          NUXT_APPLE_WWDR_CERT: ${{ secrets.NUXT_APPLE_WWDR_CERT }}
+          NUXT_APPLE_SIGNER_CERT: ${{ secrets.NUXT_APPLE_SIGNER_CERT }}
+          NUXT_APPLE_SIGNER_KEY: ${{ secrets.NUXT_APPLE_SIGNER_KEY }}
+          NUXT_APPLE_SIGNER_KEY_PASSPHRASE: ${{ secrets.NUXT_APPLE_SIGNER_KEY_PASSPHRASE }}
+          NUXT_GOOGLE_WALLET_ISSUER_ID: ${{ secrets.NUXT_GOOGLE_WALLET_ISSUER_ID }}
+          NUXT_GOOGLE_SERVICE_ACCOUNT_EMAIL: ${{ secrets.NUXT_GOOGLE_SERVICE_ACCOUNT_EMAIL }}
+          NUXT_GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY: ${{ secrets.NUXT_GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY }}
+          NUXT_SAMSUNG_PARTNER_ID: ${{ secrets.NUXT_SAMSUNG_PARTNER_ID }}
+          NUXT_SAMSUNG_CARD_ID: ${{ secrets.NUXT_SAMSUNG_CARD_ID }}
+          NUXT_SAMSUNG_PRIVATE_KEY: ${{ secrets.NUXT_SAMSUNG_PRIVATE_KEY }}
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=stampku
