@@ -35,6 +35,12 @@ Requirements for this milestone. Each maps to roadmap phases.
 - [x] **AUTH-02**: Staff are redirected based on role after login (cashier to /cashier, admin to /dashboard)
 - [x] **AUTH-03**: Staff cannot change their own passwords
 
+### Cashier Manual Stamp
+
+- [ ] **CASH-01**: Cashier can look up a customer by phone number via API, scoped to their business
+- [ ] **CASH-02**: Cashier can search a customer by phone on the /cashier page and see their active stamp programs
+- [ ] **CASH-03**: Cashier can add stamps via phone lookup for both per_transaction and amount_based programs
+
 ## v2 Requirements
 
 Deferred to future release. Tracked but not in current roadmap.
@@ -89,12 +95,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AUTH-01 | Phase 3 | Complete |
 | AUTH-02 | Phase 3 | Complete |
 | AUTH-03 | Phase 3 | Complete |
+| CASH-01 | Phase 4 | Planned |
+| CASH-02 | Phase 4 | Planned |
+| CASH-03 | Phase 4 | Planned |
 
 **Coverage:**
 - v1 requirements: 16 total
-- Mapped to phases: 16
+- Cashier manual stamp requirements: 3 total
+- Mapped to phases: 19
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-20*
-*Last updated: 2026-03-20 after roadmap creation*
+*Last updated: 2026-03-21 after Phase 4 planning*

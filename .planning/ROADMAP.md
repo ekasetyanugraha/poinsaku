@@ -65,13 +65,31 @@ Plans:
 - [ ] 03-02-PLAN.md — Members page rewrite with staff list display, creation slideover, and action modals
 - [ ] 03-03-PLAN.md — Staff login page with role-based redirect, auth middleware and config updates
 
+### Phase 4: Cashier mode add stamp manually
+**Goal**: Cashiers can add stamps to a customer's stamp card by searching their phone number — no QR scan required. Supports both per_transaction (+/- counter) and amount_based (Rp input with preview) stamp programs.
+**Depends on:** Phase 3
+**Requirements**: CASH-01, CASH-02, CASH-03
+**Success Criteria** (what must be TRUE):
+  1. A GET to `/api/customers/lookup?phone=08xxx` as an authenticated cashier returns the customer's active stamp programs scoped to the cashier's business, with stamp progress and stamp config included
+  2. The cashier page at `/cashier` shows a phone number search input below the QR scanner (replacing the old "masukkan kode manual" section)
+  3. For a customer with one stamp program: auto-selects and shows the customer card with stamp count
+  4. For a customer with multiple stamp programs: shows a program picker before the customer card
+  5. For amount_based programs: shows an Rp amount input with real-time stamp preview instead of the +/- counter
+  6. After successful stamp add via phone lookup: page resets to scan state with phone input cleared
+**Plans:** 2 plans
+
+Plans:
+- [ ] 04-01-PLAN.md — Validators, lookup endpoint, and unit tests (backend)
+- [ ] 04-02-PLAN.md — Cashier page phone search UI, program picker, and amount_based support (frontend)
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3
+Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation | 1/1 | Complete   | 2026-03-20 |
 | 2. Server API | 3/3 | Complete   | 2026-03-20 |
 | 3. Client Layer | 3/3 | Complete   | 2026-03-20 |
+| 4. Cashier Mode | 0/2 | Planned    | — |
