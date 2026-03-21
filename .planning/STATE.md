@@ -102,8 +102,14 @@ None yet.
 - Phase 2: Decide on delete guard for non-staff members — recommend owner-role check (`if member.role === 'owner' → 403`) rather than a separate `is_managed_account` column.
 - Phase 2: Use `ban_duration: '87600h'` (10 years) consistently for deactivation — not `'876000h'`.
 
+### Quick Tasks Completed
+
+| # | Description | Date | Commit | Directory |
+|---|-------------|------|--------|-----------|
+| 260321-d2b | Prepare for deployment on Cloudflare | 2026-03-21 | fc25c95 | [260321-d2b-prepare-for-deployment-on-cloudflare](./quick/260321-d2b-prepare-for-deployment-on-cloudflare/) |
+
 ## Session Continuity
 
-Last session: 2026-03-21T01:49:00Z
+Last activity: 2026-03-21 - Completed quick task 260321-d2b: Prepare for deployment on Cloudflare
 Stopped at: Completed 04-01-PLAN.md
 Resume file: .planning/phases/04-cashier-mode-add-stamp-manually/04-02-PLAN.md
