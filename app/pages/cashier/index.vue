@@ -202,11 +202,26 @@ const { addStamps, redeemStamps, recordCashback, redeemCashback, verifyQr } = us
 const { redeemVoucher } = useVoucher()
 const toast = useToast()
 
-const state = ref<'scan' | 'customer'>('scan')
+const state = ref<'scan' | 'program-select' | 'customer'>('scan')
 const videoRef = ref<HTMLVideoElement | null>(null)
 const cameraActive = ref(false)
-const manualCode = ref('')
 const scanError = ref('')
+
+// Phone lookup state (replaces manualCode)
+const phoneSearch = ref('')
+const phoneLoading = ref(false)
+
+// Lookup results
+const lookupCustomer = ref<{ id: string; name: string; phone: string } | null>(null)
+const lookupPrograms = ref<any[]>([])
+const cashierBranchId = ref<string | null>(null)
+
+// Stamp config for current program (for amount_based detection and preview)
+const activeStampConfig = ref<{ stamp_mode: string; amount_per_stamp: number | null; stamps_per_transaction: number; stamp_target: number } | null>(null)
+
+// Phone lookup path flag — when true, redemption is blocked (per locked decision:
+// "manual mode supports adding stamps only — redemption requires QR scan")
+const isPhoneLookupPath = ref(false)
 const actionLoading = ref(false)
 const redeemLoading = ref(false)
 const voucherLoading = ref(false)
@@ -231,6 +246,13 @@ const voucherCode = ref('')
 const calculatedCashback = computed(() => {
   if (!txAmount.value || !membershipState.value?.membership_tiers?.cashback_percentage) return 0
   return Math.round(txAmount.value * (membershipState.value.membership_tiers.cashback_percentage / 100) * 100) / 100
+})
+
+// Amount-based stamp preview
+const calculatedStampsFromAmount = computed(() => {
+  if (!txAmount.value || !activeStampConfig.value?.amount_per_stamp) return 0
+  if (activeStampConfig.value.amount_per_stamp <= 0) return 0
+  return Math.floor(txAmount.value / activeStampConfig.value.amount_per_stamp)
 })
 
 let stream: MediaStream | null = null
@@ -286,14 +308,48 @@ async function handleScanResult(data: string) {
   } catch { scanError.value = 'QR code tidak valid' }
 }
 
-async function handleManualEntry() {
-  if (!manualCode.value) return
+async function handlePhoneLookup() {
+  if (!phoneSearch.value.trim()) return
+  phoneLoading.value = true
   scanError.value = ''
+
   try {
-    const parsed = JSON.parse(manualCode.value)
-    if (parsed.t && parsed.cp) await verifyAndLoad(parsed.t, parsed.cp)
-    else scanError.value = 'Data tidak valid'
-  } catch { scanError.value = 'Format data tidak valid' }
+    const result = await $fetch('/api/customers/lookup', {
+      query: { phone: phoneSearch.value.trim() },
+    }) as any
+
+    lookupCustomer.value = result.customer
+    lookupPrograms.value = result.programs
+    cashierBranchId.value = result.cashier_branch_id
+
+    if (result.programs.length === 1) {
+      // Auto-select single program
+      selectProgram(result.programs[0])
+    } else {
+      // Show program picker
+      state.value = 'program-select'
+    }
+  } catch (e: any) {
+    scanError.value = e.data?.message || e.message || 'Gagal mencari pelanggan'
+  } finally {
+    phoneLoading.value = false
+  }
+}
+
+function selectProgram(prog: any) {
+  // Shape verifiedData to match QR verify response for full reuse of customer card
+  verifiedData.value = {
+    verified: true,
+    customer_program: prog.customer_program,
+    state: prog.state,
+  }
+  customerProgramId.value = prog.customer_program.id
+  // Use customer_program.branch_id, fall back to cashier's own branch
+  branchId.value = prog.customer_program.branch_id || cashierBranchId.value || ''
+  activeStampConfig.value = prog.stamp_config
+  // Mark as phone lookup path — blocks redemption per locked decision
+  isPhoneLookupPath.value = true
+  state.value = 'customer'
 }
 
 async function verifyAndLoad(token: string, cpId: string) {
@@ -301,8 +357,9 @@ async function verifyAndLoad(token: string, cpId: string) {
     const result = await verifyQr(token, cpId) as any
     verifiedData.value = result
     customerProgramId.value = cpId
-    // Resolve branch_id from the customer_program
     branchId.value = result.customer_program?.branch_id || ''
+    activeStampConfig.value = null  // QR verify doesn't return stamp_config
+    isPhoneLookupPath.value = false  // QR path allows redemption
     state.value = 'customer'
   } catch (e: any) {
     scanError.value = e.data?.message || e.message || 'QR code tidak valid atau sudah kedaluwarsa'
@@ -312,18 +369,34 @@ async function verifyAndLoad(token: string, cpId: string) {
 async function handleAddStamp() {
   actionLoading.value = true
   try {
-    const result = await addStamps({
+    const payload: any = {
       customer_program_id: customerProgramId.value,
       branch_id: branchId.value,
-      stamps_count: stampCount.value,
-    }) as any
-    if (verifiedData.value?.state) {
-      verifiedData.value.state.current_stamps = result.stamp_progress?.current_stamps ?? verifiedData.value.state.current_stamps
     }
-    toast.add({ title: `Berhasil menambahkan ${stampCount.value} stempel!`, color: 'success', icon: 'i-lucide-check' })
-    stampCount.value = 1
+
+    if (activeStampConfig.value?.stamp_mode === 'amount_based') {
+      payload.transaction_amount = txAmount.value
+    } else {
+      payload.stamps_count = stampCount.value
+    }
+
+    const result = await addStamps(payload) as any
+    const stampsAdded = activeStampConfig.value?.stamp_mode === 'amount_based'
+      ? result.stamp_progress?.current_stamps - (verifiedData.value?.state?.current_stamps ?? 0)
+      : stampCount.value
+
+    toast.add({
+      title: `Berhasil menambahkan ${stampsAdded} stempel!`,
+      color: 'success',
+      icon: 'i-lucide-check',
+    })
+    resetState()
   } catch (e: any) {
-    toast.add({ title: e.data?.message || e.message || 'Gagal menambah stempel', color: 'error', icon: 'i-lucide-alert-circle' })
+    toast.add({
+      title: e.data?.message || e.message || 'Gagal menambah stempel',
+      color: 'error',
+      icon: 'i-lucide-alert-circle',
+    })
   } finally {
     actionLoading.value = false
   }
@@ -414,7 +487,14 @@ function resetState() {
   redeemAmount.value = 0
   voucherCode.value = ''
   scanError.value = ''
-  manualCode.value = ''
+  // Clear phone lookup state
+  phoneSearch.value = ''
+  phoneLoading.value = false
+  lookupCustomer.value = null
+  lookupPrograms.value = []
+  cashierBranchId.value = null
+  activeStampConfig.value = null
+  isPhoneLookupPath.value = false
 }
 
 onUnmounted(() => stopCamera())
