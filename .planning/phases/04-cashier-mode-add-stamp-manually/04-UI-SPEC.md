@@ -21,7 +21,7 @@ created: 2026-03-21
 | Preset | not applicable | nuxt.config.ts |
 | Component library | @nuxt/ui — UButton, UInput, UCard, UFormField, UBadge, UIcon | RESEARCH.md + codebase |
 | Icon library | Lucide via `i-lucide-*` | app/pages/cashier/index.vue |
-| Font | DM Sans (400, 500, 600, 700) from Google Fonts | app/assets/css/main.css |
+| Font | DM Sans (400, 600) from Google Fonts | app/assets/css/main.css |
 | Design pattern | Glass morphism — `class="glass"` on UCard | app/assets/css/main.css |
 
 shadcn gate: not applicable — project uses @nuxt/ui, not a shadcn-compatible stack.
@@ -44,7 +44,7 @@ Declared values (multiples of 4). All values already in use across the cashier p
 | 3xl | 64px | Not used in cashier layout (mobile-focused) |
 
 Exceptions:
-- Phone input touch target: minimum 44px height (mobile cashier use case — finger-operated)
+- Phone input touch target: minimum 48px height (`h-12`) — nearest multiple of 4 above the 44px accessibility minimum; mobile cashier use case, finger-operated
 - +/- stamp counter buttons: `size="sm"` from @nuxt/ui, rendered at ~32px — acceptable for tap target with surrounding whitespace
 - Camera viewfinder: `aspect-square max-w-sm` — not on the 8-point scale; it is a viewport-relative block
 
@@ -54,12 +54,14 @@ Exceptions:
 
 All roles use DM Sans. The cashier page is Indonesian-language; all copy in this spec uses Indonesian.
 
+Two weights only: `font-normal` (400) for body and label text; `font-semibold` (600) for headings and display text.
+
 | Role | Size | Weight | Line Height | Usage |
 |------|------|--------|-------------|-------|
-| Display | 20px (`text-xl`) | 700 (`font-bold`) | 1.2 | Page heading "Scan QR Pelanggan" |
+| Display | 20px (`text-xl`) | 600 (`font-semibold`) | 1.2 | Page heading "Scan QR Pelanggan" |
 | Heading | 16px (`text-base` + `font-semibold`) | 600 (`font-semibold`) | 1.25 | Card section labels, customer name, program name in picker |
 | Body | 14px (`text-sm`) | 400 (`font-normal`) | 1.5 | Phone number under customer name, program description, stamp count, preview text |
-| Label | 14px (`text-sm`) | 500 (`font-medium`) | 1.4 | Form field labels ("Jumlah Stempel", "Nomor HP Pelanggan") |
+| Label | 14px (`text-sm`) | 400 (`font-normal`) | 1.4 | Form field labels ("Jumlah Stempel", "Nomor HP Pelanggan") |
 
 Font family class: `font-heading` maps to DM Sans (same as `font-sans`) per `main.css` `@theme` block.
 
@@ -93,7 +95,7 @@ All components already present in the project. No new installs needed.
 
 | Component | Usage in This Phase | Variant / Props |
 |-----------|--------------------|-|
-| `UInput` | Phone number field | `icon="i-lucide-phone"`, `placeholder="08xxx"`, `type="tel"`, `size="md"` |
+| `UInput` | Phone number field | `icon="i-lucide-phone"`, `placeholder="08xxx"`, `type="tel"`, `size="md"`, `class="h-12"` |
 | `UButton` | Search trigger, program picker items, back button, stamp add CTA | Primary fill for CTA; `variant="outline"` for picker; `variant="ghost"` for back |
 | `UCard` | Phone lookup section wrapper, program picker wrapper, existing customer info card | `class="glass"` on all cards |
 | `UIcon` | Phone icon, search icon, arrow-left for back, stamp icon on CTA | `i-lucide-phone`, `i-lucide-search`, `i-lucide-arrow-left`, `i-lucide-stamp` |
@@ -110,22 +112,26 @@ This phase extends the existing state machine. Each state has a distinct layout 
 
 **Phone lookup section replaces the existing "Atau masukkan kode manual" block.**
 
+Primary visual anchor: the phone input row (`UInput` + `UButton "Cari Pelanggan"`) is the focal point — it is the only interactive element below the QR scanner in this state.
+
 Layout (below the QR scanner):
 ```
 [ divider line ]
 [ label: "Atau cari pelanggan manual:" ]
-[ UInput phone ] [ UButton "Cari" ]
+[ UInput phone h-12 ] [ UButton "Cari Pelanggan" ]
 [ error banner (conditional) ]
 ```
 
-- Input: `type="tel"`, placeholder `"Contoh: 08123456789"`, icon `i-lucide-phone`
-- Button: default `@nuxt/ui` primary fill, label "Cari", `size="md"`
+- Input: `type="tel"`, `class="h-12"`, placeholder `"Contoh: 08123456789"`, icon `i-lucide-phone`
+- Button: default `@nuxt/ui` primary fill, label "Cari Pelanggan", `size="md"`
 - Loading: button shows `:loading="phoneLoading"` spinner while fetch is in-flight
 - Error banner: `class="flex items-center gap-2 rounded-lg bg-red-500/10 p-3 text-sm text-red-500"` — same pattern as existing `scanError` block (line 45-48 in cashier/index.vue)
 
 ### State: `program-select` (NEW intermediate state)
 
 Shown when lookup returns 2+ active stamp programs for the customer at this business.
+
+Primary visual anchor: the list of program picker cards. The customer name and phone serve as context above the list; the list items are the actionable focal point.
 
 Layout:
 ```
@@ -166,7 +172,7 @@ All copy is Indonesian. The cashier page is consistently Indonesian throughout.
 |---------|------|
 | Section label (replaces "Atau masukkan kode manual:") | `Atau cari pelanggan manual:` |
 | Phone input placeholder | `Contoh: 08123456789` |
-| Search button CTA | `Cari` |
+| Search button CTA | `Cari Pelanggan` |
 | Loading state (button) | (spinner only, no text change — @nuxt/ui `:loading` prop) |
 | Program picker heading | `Pilih Program Stempel` |
 | Program picker sub-label | `{customer name} memiliki {N} program aktif` |
@@ -179,7 +185,7 @@ All copy is Indonesian. The cashier page is consistently Indonesian throughout.
 | Error: phone not found | `Pelanggan tidak ditemukan` |
 | Error: no active stamp programs | `Pelanggan tidak memiliki program stempel aktif` |
 | Error: invalid phone format | `Format nomor telepon tidak valid` |
-| Error: stamp add failed | `Gagal menambah stempel` (already exists as fallback) |
+| Error: stamp add failed | `Gagal menambah stempel. Coba lagi atau hubungi administrator.` |
 | Error: phone input empty | (no toast — button is disabled when input is empty) |
 
 Empty state: not applicable — the phone lookup section is always visible in the `scan` state. There is no empty list to display.
@@ -193,10 +199,11 @@ Destructive actions: none in this phase. Adding stamps is not reversible from th
 ### Phone Input Behavior
 
 - Input type: `type="tel"` — triggers numeric keyboard on mobile (no masking library needed)
+- Input height: `class="h-12"` — 48px touch target for finger-operated mobile use
 - Validation: on submit only (not on-change) — match existing cashier page pattern
-- Submit trigger: "Cari" button click OR Enter key on input (`@keyup.enter="handlePhoneLookup"`)
-- Empty input: "Cari" button is `:disabled="!phoneSearch.trim()"` — no error shown, button is greyed
-- While loading: "Cari" button shows `:loading="phoneLoading"` — input remains editable
+- Submit trigger: "Cari Pelanggan" button click OR Enter key on input (`@keyup.enter="handlePhoneLookup"`)
+- Empty input: "Cari Pelanggan" button is `:disabled="!phoneSearch.trim()"` — no error shown, button is greyed
+- While loading: "Cari Pelanggan" button shows `:loading="phoneLoading"` — input remains editable
 - After error: error banner appears below the input row — input is NOT cleared (cashier may want to edit)
 - After success (1 program): transition directly to `'customer'` state — phone input becomes irrelevant
 - After success (2+ programs): transition to `'program-select'` state
