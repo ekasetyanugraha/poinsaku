@@ -78,6 +78,10 @@ export const customerRegisterSchema = z.object({
 
 export const phoneSchema = z.string().regex(/^(?:\+62|62|0)[2-9]\d{7,11}$/)
 
+export const customerLookupSchema = z.object({
+  phone: phoneSchema,
+})
+
 // Transaction request schemas
 export const stampAddSchema = z.object({
   customer_program_id: z.string().uuid(),
@@ -155,4 +159,10 @@ export function normalizePhone(phone: string): string {
   if (phone.startsWith('62')) return '+' + phone
   if (phone.startsWith('0')) return '+62' + phone.slice(1)
   return phone
+}
+
+export function calculateStampsFromAmount(amount: number, amountPerStamp: number): number {
+  if (!amountPerStamp || amountPerStamp <= 0) return 0
+  if (amount <= 0) return 0
+  return Math.floor(amount / amountPerStamp)
 }
