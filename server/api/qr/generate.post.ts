@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import crypto from 'crypto'
+import crypto from 'node:crypto'
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
