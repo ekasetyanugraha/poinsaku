@@ -3,10 +3,10 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: "Checkpoint 03-02 Task 2: awaiting human verification of members.vue"
-last_updated: "2026-03-20T08:59:57.968Z"
+stopped_at: Phase 4 context gathered
+last_updated: "2026-03-21T00:56:15.287Z"
 progress:
-  total_phases: 3
+  total_phases: 4
   completed_phases: 3
   total_plans: 7
   completed_plans: 7
@@ -83,6 +83,10 @@ Recent decisions affecting current work:
 - [Phase 03-client-layer]: scope_type starts as empty string in create form — owner must explicitly choose scope (no default, per CONTEXT locked decision)
 - [Phase 03-client-layer]: Reactivate action skips confirmation modal — non-destructive, immediate toggle
 
+### Roadmap Evolution
+
+- Phase 4 added: Cashier mode add stamp manually
+
 ### Pending Todos
 
 None yet.
@@ -95,6 +99,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-20T08:59:44.655Z
-Stopped at: Checkpoint 03-02 Task 2: awaiting human verification of members.vue
-Resume file: None
+Last session: 2026-03-21T00:56:15.279Z
+Stopped at: Phase 4 context gathered
+Resume file: .planning/phases/04-cashier-mode-add-stamp-manually/04-CONTEXT.md
