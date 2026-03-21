@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: unknown
-stopped_at: Phase 4 context gathered
-last_updated: "2026-03-21T00:56:15.287Z"
+status: executing
+stopped_at: Completed 04-01-PLAN.md
+last_updated: "2026-03-21T01:49:00Z"
 progress:
   total_phases: 4
   completed_phases: 3
-  total_plans: 7
-  completed_plans: 7
+  total_plans: 9
+  completed_plans: 8
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-20)
 
 **Core value:** Business owners can create and fully control staff accounts (admins and cashiers) without staff having self-service access to credentials.
-**Current focus:** Phase 03 — client-layer
+**Current focus:** Phase 04 — cashier-mode-add-stamp-manually
 
 ## Current Position
 
-Phase: 03 (client-layer) — EXECUTING
-Plan: 2 of 3
+Phase: 04 (cashier-mode-add-stamp-manually) — EXECUTING
+Plan: 2 of 2
 
 ## Performance Metrics
 
@@ -53,6 +53,7 @@ Plan: 2 of 3
 | Phase 03-client-layer P01 | 2 | 2 tasks | 4 files |
 | Phase 03 P03 | 1min | 1 tasks | 3 files |
 | Phase 03 P02 | 3 | 1 tasks | 1 files |
+| Phase 04 P01 | 7min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -82,6 +83,10 @@ Recent decisions affecting current work:
 - [Phase 03]: Split auth middleware: /cashier routes redirect to /staff/login, /dashboard routes to /login
 - [Phase 03-client-layer]: scope_type starts as empty string in create form — owner must explicitly choose scope (no default, per CONTEXT locked decision)
 - [Phase 03-client-layer]: Reactivate action skips confirmation modal — non-destructive, immediate toggle
+- [Phase 04-cashier]: GET /api/customers/lookup derives businessId from session member record, not client query param — cashier route has no business slug in URL
+- [Phase 04-cashier]: Response always returns programs array (not single object) — client auto-selects when length=1
+- [Phase 04-cashier]: cashier_branch_id included in lookup response as fallback for branch-scoped cashiers
+- [Phase 04-cashier]: stamp_config included per program in lookup response for amount_based preview without extra round-trip
 
 ### Roadmap Evolution
 
@@ -99,6 +104,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-21T00:56:15.279Z
-Stopped at: Phase 4 context gathered
-Resume file: .planning/phases/04-cashier-mode-add-stamp-manually/04-CONTEXT.md
+Last session: 2026-03-21T01:49:00Z
+Stopped at: Completed 04-01-PLAN.md
+Resume file: .planning/phases/04-cashier-mode-add-stamp-manually/04-02-PLAN.md

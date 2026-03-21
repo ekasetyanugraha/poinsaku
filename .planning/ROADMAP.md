@@ -76,7 +76,7 @@ Plans:
   4. For a customer with multiple stamp programs: shows a program picker before the customer card
   5. For amount_based programs: shows an Rp amount input with real-time stamp preview instead of the +/- counter
   6. After successful stamp add via phone lookup: page resets to scan state with phone input cleared
-**Plans:** 2 plans
+**Plans:** 1/2 plans executed
 
 Plans:
 - [ ] 04-01-PLAN.md — Validators, lookup endpoint, and unit tests (backend)
@@ -92,4 +92,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | 1. Foundation | 1/1 | Complete   | 2026-03-20 |
 | 2. Server API | 3/3 | Complete   | 2026-03-20 |
 | 3. Client Layer | 3/3 | Complete   | 2026-03-20 |
-| 4. Cashier Mode | 0/2 | Planned    | — |
+| 4. Cashier Mode | 1/2 | In Progress|  |

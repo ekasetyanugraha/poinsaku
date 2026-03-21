@@ -37,8 +37,8 @@ Requirements for this milestone. Each maps to roadmap phases.
 
 ### Cashier Manual Stamp
 
-- [ ] **CASH-01**: Cashier can look up a customer by phone number via API, scoped to their business
-- [ ] **CASH-02**: Cashier can search a customer by phone on the /cashier page and see their active stamp programs
+- [x] **CASH-01**: Cashier can look up a customer by phone number via API, scoped to their business
+- [x] **CASH-02**: Cashier can search a customer by phone on the /cashier page and see their active stamp programs
 - [ ] **CASH-03**: Cashier can add stamps via phone lookup for both per_transaction and amount_based programs
 
 ## v2 Requirements
