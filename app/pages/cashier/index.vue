@@ -32,12 +32,26 @@
         </UButton>
 
         <div class="pt-4 border-t">
-          <p class="text-sm text-muted mb-2">Atau masukkan kode manual:</p>
+          <p class="text-sm text-muted mb-2">Atau cari pelanggan manual:</p>
           <div class="flex gap-2">
             <div class="flex-1">
-              <UInput v-model="manualCode" placeholder="Paste QR data..." icon="i-lucide-qr-code" />
+              <UInput
+                v-model="phoneSearch"
+                placeholder="Contoh: 08123456789"
+                icon="i-lucide-phone"
+                type="tel"
+                class="h-12"
+                @keyup.enter="handlePhoneLookup"
+              />
             </div>
-            <UButton class="cursor-pointer" @click="handleManualEntry">Verifikasi</UButton>
+            <UButton
+              class="cursor-pointer"
+              :loading="phoneLoading"
+              :disabled="!phoneSearch.trim()"
+              @click="handlePhoneLookup"
+            >
+              Cari Pelanggan
+            </UButton>
           </div>
         </div>
       </div>
@@ -45,6 +59,37 @@
       <div v-if="scanError" class="flex items-center gap-2 rounded-lg bg-red-500/10 p-3 text-sm text-red-500">
         <UIcon name="i-lucide-alert-circle" class="size-4 shrink-0" />
         <span>{{ scanError }}</span>
+      </div>
+    </div>
+
+    <!-- PROGRAM SELECT STATE -->
+    <div v-else-if="state === 'program-select'" class="space-y-4">
+      <UButton variant="ghost" class="cursor-pointer" @click="resetState">
+        <UIcon name="i-lucide-arrow-left" class="size-4 mr-2" />
+        Scan Baru
+      </UButton>
+
+      <div class="space-y-3">
+        <h2 class="text-base font-semibold">Pilih Program Stempel</h2>
+        <p class="text-sm text-muted">
+          {{ lookupCustomer?.name }} memiliki {{ lookupPrograms.length }} program aktif
+        </p>
+
+        <div class="space-y-2">
+          <UButton
+            v-for="prog in lookupPrograms"
+            :key="prog.customer_program.id"
+            variant="outline"
+            class="w-full text-left justify-start cursor-pointer"
+            size="lg"
+            @click="selectProgram(prog)"
+          >
+            <div>
+              <p class="font-semibold">{{ prog.customer_program.programs.name }}</p>
+              <p class="text-sm text-muted">{{ prog.state?.current_stamps ?? 0 }} stempel</p>
+            </div>
+          </UButton>
+        </div>
       </div>
     </div>
 
@@ -106,26 +151,51 @@
       <!-- STAMP ACTION CARD -->
       <UCard v-if="programType === 'stamp'" class="glass">
         <div class="space-y-4">
-          <div class="flex items-center justify-between">
-            <label class="font-medium">Jumlah Stempel</label>
-            <div class="flex items-center gap-3">
-              <UButton variant="outline" square aria-label="Kurangi stempel" class="cursor-pointer" size="sm" @click="stampCount = Math.max(1, stampCount - 1)">
-                <UIcon name="i-lucide-minus" class="size-4" />
-              </UButton>
-              <span class="text-xl font-heading font-bold w-8 text-center">{{ stampCount }}</span>
-              <UButton variant="outline" square aria-label="Tambah stempel" class="cursor-pointer" size="sm" @click="stampCount = Math.min(10, stampCount + 1)">
-                <UIcon name="i-lucide-plus" class="size-4" />
-              </UButton>
+          <!-- PER_TRANSACTION: existing +/- counter -->
+          <template v-if="activeStampConfig?.stamp_mode !== 'amount_based'">
+            <div class="flex items-center justify-between">
+              <label class="font-medium">Jumlah Stempel</label>
+              <div class="flex items-center gap-3">
+                <UButton variant="outline" square aria-label="Kurangi stempel" class="cursor-pointer" size="sm" @click="stampCount = Math.max(1, stampCount - 1)">
+                  <UIcon name="i-lucide-minus" class="size-4" />
+                </UButton>
+                <span class="text-xl font-heading font-bold w-8 text-center">{{ stampCount }}</span>
+                <UButton variant="outline" square aria-label="Tambah stempel" class="cursor-pointer" size="sm" @click="stampCount = Math.min(10, stampCount + 1)">
+                  <UIcon name="i-lucide-plus" class="size-4" />
+                </UButton>
+              </div>
             </div>
-          </div>
 
-          <UButton class="w-full cursor-pointer" size="lg" :loading="actionLoading" @click="handleAddStamp">
-            <UIcon name="i-lucide-stamp" class="size-4.5 mr-2" />
-            Tambah {{ stampCount }} Stempel
-          </UButton>
+            <UButton class="w-full cursor-pointer" size="lg" :loading="actionLoading" @click="handleAddStamp">
+              <UIcon name="i-lucide-stamp" class="size-4.5 mr-2" />
+              Tambah {{ stampCount }} Stempel
+            </UButton>
+          </template>
 
+          <!-- AMOUNT_BASED: Rp amount input + preview -->
+          <template v-else>
+            <UFormField label="Nominal Transaksi (Rp)">
+              <UInput v-model.number="txAmount" type="number" placeholder="50000" class="w-full" />
+            </UFormField>
+            <p v-if="calculatedStampsFromAmount > 0" class="text-sm text-muted">
+              Rp {{ txAmount.toLocaleString('id-ID') }} = {{ calculatedStampsFromAmount }} stempel
+            </p>
+            <UButton
+              class="w-full cursor-pointer"
+              size="lg"
+              :loading="actionLoading"
+              :disabled="!txAmount || txAmount <= 0"
+              @click="handleAddStamp"
+            >
+              <UIcon name="i-lucide-stamp" class="size-4.5 mr-2" />
+              Tambah Stempel
+            </UButton>
+          </template>
+
+          <!-- Redemption button: ONLY visible on QR path, hidden for phone lookup path
+               Per locked decision: "manual mode supports adding stamps only — redemption requires QR scan" -->
           <UButton
-            v-if="canRedeemStamp"
+            v-if="canRedeemStamp && !isPhoneLookupPath"
             class="w-full cursor-pointer animate-pulse-badge"
             size="lg"
             variant="soft"
@@ -207,7 +277,7 @@ const videoRef = ref<HTMLVideoElement | null>(null)
 const cameraActive = ref(false)
 const scanError = ref('')
 
-// Phone lookup state (replaces manualCode)
+// Phone lookup state
 const phoneSearch = ref('')
 const phoneLoading = ref(false)
 
