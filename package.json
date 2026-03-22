@@ -34,7 +34,8 @@
     "@types/qrcode": "^1.5.6",
     "supabase": "^2.82.0",
     "tailwindcss": "^4.2.1",
-    "vitest": "^4.1.0"
+    "vitest": "^4.1.0",
+    "wrangler": "^4.76.0"
   },
   "peerDependencies": {
     "typescript": "^5"
