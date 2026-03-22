@@ -27,7 +27,7 @@ jobs:
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           NUXT_PUBLIC_APP_URL: ${{ secrets.NUXT_PUBLIC_APP_URL }}
           NUXT_QR_TOKEN_SECRET: ${{ secrets.NUXT_QR_TOKEN_SECRET }}
           NUXT_APPLE_PASS_TYPE_ID: ${{ secrets.NUXT_APPLE_PASS_TYPE_ID }}
