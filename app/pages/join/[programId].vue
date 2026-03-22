@@ -3,8 +3,29 @@
     <!-- Decorative gradient orb -->
     <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-gradient-to-br from-primary/20 to-cyan-400/20 blur-3xl pointer-events-none" />
 
-    <!-- Registration Form -->
-    <UCard v-if="!registered" class="w-full max-w-md glass relative">
+    <!-- Step 1: Phone Input -->
+    <UCard v-if="step === 'phone'" class="w-full max-w-md glass relative">
+      <template #header>
+        <div class="text-center">
+          <div class="w-14 h-14 rounded-full bg-gradient-to-br from-primary to-cyan-600 mx-auto mb-4 flex items-center justify-center text-white shadow-lg shadow-primary/30">
+            <UIcon name="i-lucide-stamp" class="size-7" />
+          </div>
+          <p class="font-heading font-semibold text-base">Program Loyalitas</p>
+          <p class="text-sm text-(--ui-text-muted)">Masukkan nomor HP Anda untuk melanjutkan</p>
+        </div>
+      </template>
+
+      <form class="space-y-3" @submit.prevent="handleCheck">
+        <UFormField label="Nomor HP" required :error="phoneError">
+          <UInput v-model="phone" placeholder="08xxxxxxxxxx" type="tel" inputmode="tel" icon="i-lucide-phone" autofocus />
+        </UFormField>
+        <p v-if="errorMsg" class="text-sm text-red-500">{{ errorMsg }}</p>
+        <UButton type="submit" class="w-full cursor-pointer" size="lg" :loading="loading" block>Lanjutkan</UButton>
+      </form>
+    </UCard>
+
+    <!-- Step 2: Registration Form -->
+    <UCard v-else-if="step === 'register'" class="w-full max-w-md glass relative">
       <template #header>
         <div class="text-center">
           <div class="w-14 h-14 rounded-full bg-gradient-to-br from-primary to-cyan-600 mx-auto mb-4 flex items-center justify-center text-white shadow-lg shadow-primary/30">
@@ -16,11 +37,11 @@
       </template>
 
       <form class="space-y-3" @submit.prevent="handleRegister">
+        <UFormField label="Nomor HP" required>
+          <UInput :model-value="phone" disabled icon="i-lucide-phone" />
+        </UFormField>
         <UFormField label="Nama" required>
           <UInput v-model="name" placeholder="Nama lengkap Anda" autofocus />
-        </UFormField>
-        <UFormField label="Nomor HP" required :error="phoneError">
-          <UInput v-model="phone" placeholder="08xxxxxxxxxx" type="tel" inputmode="tel" icon="i-lucide-phone" />
         </UFormField>
         <UFormField label="Email">
           <UInput type="email" v-model="emailVal" placeholder="email@contoh.com" icon="i-lucide-mail" />
@@ -37,11 +58,14 @@
           />
         </UFormField>
         <p v-if="errorMsg" class="text-sm text-red-500">{{ errorMsg }}</p>
-        <UButton type="submit" class="w-full cursor-pointer" size="lg" :loading="loading" block>Daftar & Dapatkan Kartu</UButton>
+        <div class="flex gap-2">
+          <UButton variant="outline" class="cursor-pointer" size="lg" @click="step = 'phone'">Kembali</UButton>
+          <UButton type="submit" class="flex-1 cursor-pointer" size="lg" :loading="loading" block>Daftar & Dapatkan Kartu</UButton>
+        </div>
       </form>
     </UCard>
 
-    <!-- Success State -->
+    <!-- Step 3: Success State -->
     <UCard v-else class="w-full max-w-md text-center glass relative">
       <template #header>
         <div class="text-center">
@@ -77,6 +101,7 @@ definePageMeta({ layout: false })
 const route = useRoute()
 const programId = route.params.programId as string
 
+const step = ref<'phone' | 'register' | 'done'>('phone')
 const name = ref('')
 const phone = ref('')
 const emailVal = ref('')
@@ -84,7 +109,6 @@ const gender = ref('')
 const loading = ref(false)
 const errorMsg = ref('')
 const phoneError = ref('')
-const registered = ref(false)
 const customerProgramIdResult = ref('')
 
 watch(phone, (val) => {
@@ -96,11 +120,40 @@ watch(phone, (val) => {
   }
 })
 
+async function handleCheck() {
+  errorMsg.value = ''
+  if (!phone.value.trim()) { errorMsg.value = 'Nomor HP wajib diisi'; return }
+  if (phoneError.value) { errorMsg.value = phoneError.value; return }
+
+  loading.value = true
+  try {
+    const result = await $fetch('/api/customers/check', {
+      method: 'POST',
+      body: { phone: phone.value, program_id: programId },
+    }) as { found: boolean; enrolled: boolean; customer_program_id?: string; customer?: { name: string; email: string | null; gender: string | null } }
+
+    if (result.enrolled && result.customer_program_id) {
+      await navigateTo(`/card/${result.customer_program_id}`)
+      return
+    }
+
+    if (result.found && result.customer) {
+      name.value = result.customer.name || ''
+      emailVal.value = result.customer.email || ''
+      gender.value = result.customer.gender || ''
+    }
+
+    step.value = 'register'
+  } catch (e: any) {
+    errorMsg.value = e.data?.message || 'Gagal memeriksa nomor HP. Coba lagi.'
+  } finally {
+    loading.value = false
+  }
+}
+
 async function handleRegister() {
   errorMsg.value = ''
   if (!name.value.trim()) { errorMsg.value = 'Nama wajib diisi'; return }
-  if (!phone.value.trim()) { errorMsg.value = 'Nomor HP wajib diisi'; return }
-  if (phoneError.value) { errorMsg.value = phoneError.value; return }
 
   loading.value = true
   try {
@@ -115,7 +168,7 @@ async function handleRegister() {
       },
     }) as any
     customerProgramIdResult.value = result.customer_program_id
-    registered.value = true
+    step.value = 'done'
   } catch (e: any) {
     errorMsg.value = e.data?.message || 'Gagal mendaftar. Coba lagi.'
   } finally {
