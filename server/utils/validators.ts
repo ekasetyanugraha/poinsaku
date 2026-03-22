@@ -85,7 +85,7 @@ export const customerLookupSchema = z.object({
 // Transaction request schemas
 export const stampAddSchema = z.object({
   customer_program_id: z.string().uuid(),
-  branch_id: z.string().uuid(),
+  branch_id: z.string().uuid().nullable().optional(),
   transaction_amount: z.number().positive().optional(),
   stamps_count: z.number().int().positive().optional(),
   notes: z.string().optional(),
@@ -93,20 +93,20 @@ export const stampAddSchema = z.object({
 
 export const stampRedeemSchema = z.object({
   customer_program_id: z.string().uuid(),
-  branch_id: z.string().uuid(),
+  branch_id: z.string().uuid().nullable().optional(),
   notes: z.string().optional(),
 })
 
 export const cashbackEarnSchema = z.object({
   customer_program_id: z.string().uuid(),
-  branch_id: z.string().uuid(),
+  branch_id: z.string().uuid().nullable().optional(),
   transaction_amount: z.number().positive(),
   notes: z.string().optional(),
 })
 
 export const cashbackRedeemSchema = z.object({
   customer_program_id: z.string().uuid(),
-  branch_id: z.string().uuid(),
+  branch_id: z.string().uuid().nullable().optional(),
   amount: z.number().positive(),
   notes: z.string().optional(),
 })

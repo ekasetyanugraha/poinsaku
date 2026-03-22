@@ -82,7 +82,7 @@ export default defineEventHandler(async (event) => {
     .insert({
       customer_program_id: parsed.data.customer_program_id,
       business_id,
-      branch_id: parsed.data.branch_id,
+      branch_id: parsed.data.branch_id ?? null,
       type: 'cashback_earn',
       performed_by: member.authUserId,
       transaction_amount: parsed.data.transaction_amount,
@@ -145,7 +145,7 @@ export default defineEventHandler(async (event) => {
         .insert({
           customer_program_id: parsed.data.customer_program_id,
           business_id,
-          branch_id: parsed.data.branch_id,
+          branch_id: parsed.data.branch_id ?? null,
           type: 'tier_upgrade',
           performed_by: member.authUserId,
           tier_from_id: state.current_tier_id,

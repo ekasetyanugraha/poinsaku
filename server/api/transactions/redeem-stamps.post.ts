@@ -80,7 +80,7 @@ export default defineEventHandler(async (event) => {
     .insert({
       customer_program_id: parsed.data.customer_program_id,
       business_id: businessId,
-      branch_id: parsed.data.branch_id,
+      branch_id: parsed.data.branch_id ?? null,
       type: 'stamp_redemption',
       performed_by: member.authUserId,
       stamps_count: -stampConfig.stamp_target,
