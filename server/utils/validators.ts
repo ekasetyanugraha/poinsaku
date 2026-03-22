@@ -84,16 +84,16 @@ export const customerLookupSchema = z.object({
 
 // Transaction request schemas
 export const stampAddSchema = z.object({
-  customer_program_id: z.string().uuid(),
-  branch_id: z.string().uuid().nullable().optional(),
+  customer_program_id: z.string(),
+  branch_id: z.string().nullable().optional(),
   transaction_amount: z.number().positive().optional(),
   stamps_count: z.number().int().positive().optional(),
   notes: z.string().optional(),
 })
 
 export const stampRedeemSchema = z.object({
-  customer_program_id: z.string().uuid(),
-  branch_id: z.string().uuid().nullable().optional(),
+  customer_program_id: z.string(),
+  branch_id: z.string().nullable().optional(),
   notes: z.string().optional(),
 })
 

@@ -77,7 +77,7 @@ export default defineEventHandler(async (event) => {
     .insert({
       customer_program_id: parsed.data.customer_program_id,
       business_id,
-      branch_id: parsed.data.branch_id ?? null,
+      branch_id: parsed.data.branch_id || null,
       type: 'cashback_redeem',
       performed_by: member.authUserId,
       cashback_amount: -parsed.data.amount,

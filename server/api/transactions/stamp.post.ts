@@ -97,7 +97,7 @@ export default defineEventHandler(async (event) => {
     .insert({
       customer_program_id: parsed.data.customer_program_id,
       business_id: businessId,
-      branch_id: parsed.data.branch_id ?? null,
+      branch_id: parsed.data.branch_id || null,
       type: 'stamp_add',
       performed_by: member.authUserId,
       transaction_amount: parsed.data.transaction_amount ?? null,
