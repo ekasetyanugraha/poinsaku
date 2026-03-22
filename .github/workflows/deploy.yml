@@ -1,4 +1,4 @@
-name: Deploy to Cloudflare Pages
+name: Deploy to Cloudflare Workers
 
 on:
   push:
@@ -7,6 +7,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: staging
     permissions:
       contents: read
       deployments: write
@@ -43,9 +44,9 @@ jobs:
           NUXT_SAMSUNG_CARD_ID: ${{ secrets.NUXT_SAMSUNG_CARD_ID }}
           NUXT_SAMSUNG_PRIVATE_KEY: ${{ secrets.NUXT_SAMSUNG_PRIVATE_KEY }}
 
-      - name: Deploy to Cloudflare Pages
+      - name: Deploy to Cloudflare Workers
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy dist --project-name=stampku
+          command: deploy

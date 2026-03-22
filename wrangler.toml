@@ -1,7 +1,7 @@
-name = "stampku"
+name = "poinsaku"
 compatibility_date = "2024-09-23"
 compatibility_flags = ["nodejs_compat"]
 pages_build_output_dir = "dist"
 
 [vars]
-NUXT_PUBLIC_APP_URL = "https://stampku.pages.dev"
+NUXT_PUBLIC_APP_URL = "https://poinsaku.ekasetyanugraha.workers.dev"

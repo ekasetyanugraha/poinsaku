@@ -4,9 +4,9 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build",
-    "build:cf": "NITRO_PRESET=cloudflare_pages nuxt build",
-    "deploy": "wrangler pages deploy dist",
-    "preview:cf": "wrangler pages dev dist",
+    "build:cf": "NITRO_PRESET=cloudflare nuxt build",
+    "deploy": "wrangler deploy",
+    "preview:cf": "wrangler dev",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
