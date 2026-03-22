@@ -59,6 +59,8 @@ export default defineEventHandler(async (event) => {
   // Fetch program-type-specific state
   let state: Record<string, unknown> | null = null
 
+  let stampConfig: Record<string, unknown> | null = null
+
   if (customerProgram.programs.type === 'stamp') {
     const { data: stampProgress } = await db
       .from('customer_stamp_progress')
@@ -66,6 +68,13 @@ export default defineEventHandler(async (event) => {
       .eq('customer_program_id', parsed.data.customer_program_id)
       .single()
     state = stampProgress
+
+    const { data: scData } = await db
+      .from('program_stamp_config')
+      .select('stamp_mode, amount_per_stamp, stamps_per_transaction, stamp_target')
+      .eq('program_id', customerProgram.programs.id)
+      .single()
+    stampConfig = scData
   } else if (customerProgram.programs.type === 'membership') {
     const { data: membershipState } = await db
       .from('customer_membership_state')
@@ -82,5 +91,6 @@ export default defineEventHandler(async (event) => {
     verified: true,
     customer_program: customerProgram,
     state,
+    stamp_config: stampConfig,
   }
 })

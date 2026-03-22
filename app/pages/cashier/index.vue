@@ -307,7 +307,11 @@ const membershipState = computed(() => programType.value === 'membership' ? veri
 
 // Stamp controls
 const stampCount = ref(1)
-const canRedeemStamp = computed(() => false) // Requires stamp config target to determine
+const canRedeemStamp = computed(() => {
+  if (programType.value !== 'stamp') return false
+  if (!activeStampConfig.value?.stamp_target) return false
+  return (stampState.value?.current_stamps ?? 0) >= activeStampConfig.value.stamp_target
+})
 
 // Membership controls
 const txAmount = ref(0)
@@ -428,7 +432,7 @@ async function verifyAndLoad(token: string, cpId: string) {
     verifiedData.value = result
     customerProgramId.value = cpId
     branchId.value = result.customer_program?.branch_id || ''
-    activeStampConfig.value = null  // QR verify doesn't return stamp_config
+    activeStampConfig.value = result.stamp_config ?? null
     isPhoneLookupPath.value = false  // QR path allows redemption
     state.value = 'customer'
   } catch (e: any) {
