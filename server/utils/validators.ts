@@ -154,6 +154,15 @@ export const reassignBranchSchema = z.object({
 })
 
 // Phone normalization
+// --- Wishlist Schema ---
+export const wishlistSubmissionSchema = z.object({
+  name: z.string().min(1, 'Nama wajib diisi').max(100),
+  email: z.string().email('Email tidak valid'),
+  company: z.string().max(100).optional(),
+  industry: z.string().max(100).optional(),
+  message: z.string().max(250).optional(),
+})
+
 export function normalizePhone(phone: string): string {
   if (phone.startsWith('+62')) return phone
   if (phone.startsWith('62')) return '+' + phone
