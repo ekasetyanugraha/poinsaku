@@ -7,14 +7,14 @@ export default defineNuxtRouteMiddleware(async (to) => {
   // Wait for member data to load if not available yet
   // Pages that need role checks should ensure the member is loaded
 
-  // Members page: owner or business-admin only
-  if (to.path.includes('/members') && !(role.value === 'owner' || (role.value === 'admin' && scopeType.value === 'business'))) {
+  // Members page: superadmin, owner, or business-admin only
+  if (to.path.includes('/members') && !(role.value === 'superadmin' || role.value === 'owner' || (role.value === 'admin' && scopeType.value === 'business'))) {
     const slug = to.params.businessSlug as string
     return navigateTo(`/dashboard/${slug}`)
   }
 
-  // Settings page: owner or business-admin only
-  if (to.path.includes('/settings') && !(role.value === 'owner' || (role.value === 'admin' && scopeType.value === 'business'))) {
+  // Settings page: superadmin, owner, or business-admin only
+  if (to.path.includes('/settings') && !(role.value === 'superadmin' || role.value === 'owner' || (role.value === 'admin' && scopeType.value === 'business'))) {
     const slug = to.params.businessSlug as string
     return navigateTo(`/dashboard/${slug}`)
   }

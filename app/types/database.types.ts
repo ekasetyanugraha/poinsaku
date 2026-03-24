@@ -805,7 +805,7 @@ export type Database = {
     Enums: {
       cashback_redemption_mode: "transaction_deduction" | "voucher"
       gender_type: "male" | "female" | "other"
-      member_role: "owner" | "admin" | "cashier"
+      member_role: "superadmin" | "owner" | "admin" | "cashier"
       member_scope_type: "business" | "branch"
       program_scope_type: "business" | "branch"
       program_type: "stamp" | "membership"
@@ -952,7 +952,7 @@ export const Constants = {
     Enums: {
       cashback_redemption_mode: ["transaction_deduction", "voucher"],
       gender_type: ["male", "female", "other"],
-      member_role: ["owner", "admin", "cashier"],
+      member_role: ["superadmin", "owner", "admin", "cashier"],
       member_scope_type: ["business", "branch"],
       program_scope_type: ["business", "branch"],
       program_type: ["stamp", "membership"],
