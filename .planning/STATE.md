@@ -113,9 +113,10 @@ None yet.
 | 260324-glb | Superadmin-only dashboard page to view all wishlist submissions | 2026-03-24 | e2b77e9 | [260324-glb-create-a-new-page-in-the-dashboard-to-se](./quick/260324-glb-create-a-new-page-in-the-dashboard-to-se/) |
 | 260324-hqz | Create feature toggles table managed by superadmin with Realtime propagation | 2026-03-24 | dc25f48 | [260324-hqz-create-feature-toggles-table-managed-by-](./quick/260324-hqz-create-feature-toggles-table-managed-by-/) |
 | 260324-i2p | Add a button to create a new toggle in the feature toggles page | 2026-03-24 | 8129092 | [260324-i2p-add-a-button-to-create-a-new-toggle-in-t](./quick/260324-i2p-add-a-button-to-create-a-new-toggle-in-t/) |
+| 260324-idm | Make useFeatureToggles SSR-compatible with useFetch | 2026-03-24 | 64b7f66 | [260324-idm-make-usefeaturetoggles-ssr-compatible-wi](./quick/260324-idm-make-usefeaturetoggles-ssr-compatible-wi/) |
 
 ## Session Continuity
 
-Last activity: 2026-03-24 - Completed quick task 260324-i2p: POST API endpoint and create-toggle modal form on feature-toggles dashboard
+Last activity: 2026-03-24 - Completed quick task 260324-idm: Make useFeatureToggles SSR-compatible with useFetch
 Stopped at: Completed 04-01-PLAN.md
 Resume file: .planning/phases/04-cashier-mode-add-stamp-manually/04-02-PLAN.md
