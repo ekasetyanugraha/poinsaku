@@ -21,7 +21,7 @@ export const branchSchema = z.object({
 
 export const memberSchema = z.object({
   auth_user_id: z.string().uuid(),
-  role: z.enum(['owner', 'admin', 'cashier']),
+  role: z.enum(['superadmin', 'owner', 'admin', 'cashier']),
   scope_type: z.enum(['business', 'branch']),
   scope_id: z.string().uuid(),
   is_active: z.boolean().default(true),

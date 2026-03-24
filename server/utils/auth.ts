@@ -22,7 +22,7 @@ export async function requireUser(event: H3Event) {
 export interface MemberAccess {
   id: string
   authUserId: string
-  role: 'owner' | 'admin' | 'cashier'
+  role: 'superadmin' | 'owner' | 'admin' | 'cashier'
   scopeType: 'business' | 'branch'
   scopeId: string
   businessId: string
@@ -42,12 +42,41 @@ export interface MemberAccess {
 export async function requireMember(
   event: H3Event,
   businessId: string,
-  opts?: { roles?: ('owner' | 'admin' | 'cashier')[] },
+  opts?: { roles?: ('superadmin' | 'owner' | 'admin' | 'cashier')[] },
 ): Promise<MemberAccess> {
   const user = await requireUser(event)
   const db = getServiceClient(event)
 
-  // First check for a direct business-scoped membership
+  // Check for a superadmin membership first — superadmins have cross-business access.
+  // A superadmin passes any role check that includes 'superadmin' or 'owner'
+  // (superadmin is owner-level or above). If caller requires a more restricted role
+  // (e.g. only 'cashier'), fall through to the normal business-scoped lookup.
+  const { data: superadminMember } = await db
+    .from('members')
+    .select('id, auth_user_id, role, scope_type, scope_id, is_active, display_name')
+    .eq('auth_user_id', user.id)
+    .eq('role', 'superadmin')
+    .limit(1)
+    .maybeSingle()
+
+  if (superadminMember && superadminMember.is_active) {
+    const rolesRequired = opts?.roles
+    // Superadmin passes if no role restriction, or restriction includes 'superadmin' or 'owner'
+    if (!rolesRequired || rolesRequired.includes('superadmin') || rolesRequired.includes('owner')) {
+      return {
+        id: superadminMember.id as string,
+        authUserId: superadminMember.auth_user_id as string,
+        role: 'superadmin',
+        scopeType: 'business',
+        scopeId: businessId,
+        businessId,
+        branchId: null,
+        isActive: true,
+        displayName: (superadminMember.display_name as string | null) ?? null,
+      }
+    }
+  }
+
   // First check for a direct business-scoped membership
   const { data: bizMember } = await db
     .from('members')
