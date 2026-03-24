@@ -14,15 +14,22 @@
           PoinSaku
         </NuxtLink>
         <nav class="flex items-center gap-2 sm:gap-4">
-          <NuxtLink
-            to="/login"
-            class="text-sm font-medium text-(--ui-text-muted) hover:text-(--ui-text) cursor-pointer transition-colors duration-200"
-          >
-            Masuk
-          </NuxtLink>
-          <NuxtLink to="/register">
-            <UButton size="sm" class="cursor-pointer">Daftar Gratis</UButton>
-          </NuxtLink>
+          <template v-if="isWishlistMode">
+            <NuxtLink to="/wishlist">
+              <UButton size="sm" class="cursor-pointer">Bergabung Wishlist</UButton>
+            </NuxtLink>
+          </template>
+          <template v-else>
+            <NuxtLink
+              to="/login"
+              class="text-sm font-medium text-(--ui-text-muted) hover:text-(--ui-text) cursor-pointer transition-colors duration-200"
+            >
+              Masuk
+            </NuxtLink>
+            <NuxtLink to="/register">
+              <UButton size="sm" class="cursor-pointer">Daftar Gratis</UButton>
+            </NuxtLink>
+          </template>
         </nav>
       </div>
     </header>
@@ -121,3 +128,8 @@
     </footer>
   </div>
 </template>
+
+<script setup lang="ts">
+const config = useRuntimeConfig()
+const isWishlistMode = computed(() => config.public.wishlistMode === 'true')
+</script>

@@ -19,8 +19,8 @@
               Tingkatkan loyalitas pelanggan dengan kartu stempel digital yang terintegrasi dengan Apple Wallet, Google Wallet, dan Samsung Wallet. Tanpa perlu download aplikasi.
             </p>
             <div class="mt-8 flex justify-center lg:justify-start gap-4">
-              <NuxtLink to="/register">
-                <UButton size="lg" class="cursor-pointer">Mulai Sekarang</UButton>
+              <NuxtLink :to="isWishlistMode ? '/wishlist' : '/register'">
+                <UButton size="lg" class="cursor-pointer">{{ isWishlistMode ? 'Bergabung Wishlist' : 'Mulai Sekarang' }}</UButton>
               </NuxtLink>
               <a href="#features">
                 <UButton variant="outline" size="lg" class="cursor-pointer">Pelajari Lebih Lanjut</UButton>
@@ -158,13 +158,13 @@
       <div class="container mx-auto px-4">
         <div class="glass rounded-3xl p-8 sm:p-12 text-center max-w-4xl mx-auto">
           <h2 class="font-heading text-2xl sm:text-3xl font-bold mb-4">
-            Siap untuk Meningkatkan Loyalitas Pelanggan?
+            {{ isWishlistMode ? 'Tertarik dengan PoinSaku?' : 'Siap untuk Meningkatkan Loyalitas Pelanggan?' }}
           </h2>
           <p class="text-base text-muted mb-6 max-w-2xl mx-auto">
-            Daftar sekarang dan mulai buat program loyalitas pertama Anda. Gratis untuk memulai, tanpa kartu kredit.
+            {{ isWishlistMode ? 'Bergabung dengan wishlist kami dan jadilah yang pertama tahu saat PoinSaku diluncurkan.' : 'Daftar sekarang dan mulai buat program loyalitas pertama Anda. Gratis untuk memulai, tanpa kartu kredit.' }}
           </p>
-          <NuxtLink to="/register">
-            <UButton size="lg" class="cursor-pointer">Daftar Gratis Sekarang</UButton>
+          <NuxtLink :to="isWishlistMode ? '/wishlist' : '/register'">
+            <UButton size="lg" class="cursor-pointer">{{ isWishlistMode ? 'Bergabung Wishlist' : 'Daftar Gratis Sekarang' }}</UButton>
           </NuxtLink>
         </div>
       </div>
@@ -174,6 +174,9 @@
 
 <script setup lang="ts">
 definePageMeta({ layout: 'default' })
+
+const config = useRuntimeConfig()
+const isWishlistMode = computed(() => config.public.wishlistMode === 'true')
 
 const features = [
   {

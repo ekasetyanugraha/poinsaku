@@ -1,5 +1,5 @@
-import { getServiceClient } from '~/server/utils/supabase'
-import { wishlistSubmissionSchema } from '~/server/utils/validators'
+import { getServiceClient } from '#server/utils/supabase'
+import { wishlistSubmissionSchema } from '#server/utils/validators'
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)

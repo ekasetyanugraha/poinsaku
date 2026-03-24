@@ -29,7 +29,7 @@ export default defineNuxtConfig({
       login: '/login',
       callback: '/confirm',
       include: ['/dashboard(/*)?', '/cashier(/*)?'],
-      exclude: ['/', '/join/*', '/card/*', '/staff/login'],
+      exclude: ['/', '/join/*', '/card/*', '/staff/login', '/wishlist'],
     },
   },
 
@@ -56,6 +56,7 @@ export default defineNuxtConfig({
 
     public: {
       appUrl: 'http://localhost:8989',
+      wishlistMode: '',  // Set to 'true' in .env to enable wishlist mode
     },
   },
 
