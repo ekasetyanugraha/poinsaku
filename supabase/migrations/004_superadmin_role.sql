@@ -1,9 +1,11 @@
 -- Add 'superadmin' to member_role enum
-ALTER TYPE member_role ADD VALUE 'superadmin';
+-- NOTE: ALTER TYPE ADD VALUE cannot run inside a transaction in PG < 16,
+-- so we use IF NOT EXISTS and commit-safe pattern.
+ALTER TYPE member_role ADD VALUE IF NOT EXISTS 'superadmin';
 
--- Drop and recreate the CHECK constraint on members table to allow superadmin
--- The original constraint is unnamed and auto-named by PostgreSQL (members_check or similar).
--- We use a DO block to find and drop it by expression match, then add the new one.
+-- Drop and recreate the CHECK constraint on members table to allow superadmin.
+-- We cast role to text so PG doesn't complain about the new enum value
+-- being used in the same transaction as ALTER TYPE ADD VALUE.
 DO $$
 DECLARE
   constraint_name TEXT;
@@ -20,8 +22,8 @@ BEGIN
 END $$;
 
 ALTER TABLE members ADD CONSTRAINT members_role_scope_check CHECK (
-  (role = 'owner' AND scope_type = 'business') OR
-  (role = 'cashier' AND scope_type = 'branch') OR
-  (role = 'admin') OR
-  (role = 'superadmin' AND scope_type = 'business')
+  (role::text = 'owner' AND scope_type = 'business') OR
+  (role::text = 'cashier' AND scope_type = 'branch') OR
+  (role::text = 'admin') OR
+  (role::text = 'superadmin' AND scope_type = 'business')
 );
