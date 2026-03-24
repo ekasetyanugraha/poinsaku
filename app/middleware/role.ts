@@ -12,6 +12,11 @@ export default defineNuxtRouteMiddleware(async (to) => {
     return navigateTo('/dashboard/business')
   }
 
+  // Feature Toggles page: superadmin only
+  if (to.path.includes('/dashboard/feature-toggles') && role.value !== 'superadmin') {
+    return navigateTo('/dashboard/business')
+  }
+
   // Members page: superadmin, owner, or business-admin only
   if (to.path.includes('/members') && !(role.value === 'superadmin' || role.value === 'owner' || (role.value === 'admin' && scopeType.value === 'business'))) {
     const slug = to.params.businessSlug as string

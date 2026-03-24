@@ -72,6 +72,10 @@
               <UIcon name="i-lucide-clipboard-list" class="size-4" />
               Wishlists
             </NuxtLink>
+            <NuxtLink to="/dashboard/feature-toggles" class="flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-[13px] font-medium transition-colors hover:bg-accented cursor-pointer" active-class="bg-primary-500/10 text-primary-500" @click="sidebarOpen = false">
+              <UIcon name="i-lucide-toggle-right" class="size-4" />
+              Feature Toggles
+            </NuxtLink>
           </div>
 
           <!-- Logout -->

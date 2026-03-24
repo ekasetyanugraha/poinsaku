@@ -11,12 +11,12 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event)
   const parsed = featureToggleUpdateSchema.safeParse(body)
   if (!parsed.success) {
-    throw createError({ statusCode: 400, message: parsed.error.errors[0]?.message ?? 'Invalid request body' })
+    throw createError({ statusCode: 400, message: 'Invalid request body', data: parsed.error.flatten() })
   }
 
   const db = getServiceClient(event)
 
-  const { data, error, count } = await db
+  const { data, error } = await db
     .from('feature_toggles')
     .update({ enabled: parsed.data.enabled })
     .eq('key', key)

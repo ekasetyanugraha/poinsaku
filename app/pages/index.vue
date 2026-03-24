@@ -175,8 +175,8 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'default' })
 
-const config = useRuntimeConfig()
-const isWishlistMode = computed(() => config.public.wishlistMode)
+const { isEnabled } = useFeatureToggles()
+const isWishlistMode = computed(() => isEnabled('wishlist_mode'))
 
 const features = [
   {
