@@ -163,6 +163,11 @@ export const wishlistSubmissionSchema = z.object({
   message: z.string().max(250).optional(),
 })
 
+// --- Feature Toggle Schema ---
+export const featureToggleUpdateSchema = z.object({
+  enabled: z.boolean(),
+})
+
 export function normalizePhone(phone: string): string {
   if (phone.startsWith('+62')) return phone
   if (phone.startsWith('62')) return '+' + phone
