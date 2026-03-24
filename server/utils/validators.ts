@@ -168,6 +168,13 @@ export const featureToggleUpdateSchema = z.object({
   enabled: z.boolean(),
 })
 
+export const featureToggleCreateSchema = z.object({
+  key: z.string().min(1).max(100).regex(/^[a-z0-9_]+$/, 'Key must be lowercase alphanumeric with underscores only'),
+  label: z.string().min(1).max(100),
+  description: z.string().max(500).optional(),
+  enabled: z.boolean().default(false),
+})
+
 export function normalizePhone(phone: string): string {
   if (phone.startsWith('+62')) return phone
   if (phone.startsWith('62')) return '+' + phone
