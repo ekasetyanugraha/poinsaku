@@ -108,7 +108,7 @@ None yet.
 |---|-------------|------|--------|-----------|
 | 260321-d2b | Prepare for deployment on Cloudflare | 2026-03-21 | fc25c95 | [260321-d2b-prepare-for-deployment-on-cloudflare](./quick/260321-d2b-prepare-for-deployment-on-cloudflare/) |
 | 260321-f72 | Add a GitHub Action for deploying (w/ environment variables) | 2026-03-21 | 50e6234 | [260321-f72-add-a-github-action-for-deploying-w-envi](./quick/260321-f72-add-a-github-action-for-deploying-w-envi/) |
-| 260324-f8v | Create wishlist feature with form, database, and feature toggle | 2026-03-24 | ff9daca | [260324-f8v-create-wishlist-feature-with-form-databa](./quick/260324-f8v-create-wishlist-feature-with-form-databa/) |
+| 260324-f8v | Create wishlist feature with form, database, API, dedicated page, and feature toggle | 2026-03-24 | f64fd05 | [260324-f8v-create-wishlist-feature-with-form-databa](./quick/260324-f8v-create-wishlist-feature-with-form-databa/) |
 
 ## Session Continuity
 
