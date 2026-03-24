@@ -141,3 +141,26 @@ export async function requireMember(
 export async function requireOwner(event: H3Event, businessId: string) {
   return requireMember(event, businessId, { roles: ['owner'] })
 }
+
+/**
+ * Assert the authenticated user is a superadmin.
+ * Throws 403 if the user does not have an active superadmin member record.
+ */
+export async function requireSuperAdmin(event: H3Event) {
+  const user = await requireUser(event)
+  const db = getServiceClient(event)
+
+  const { data: member } = await db
+    .from('members')
+    .select('id, is_active')
+    .eq('auth_user_id', user.id)
+    .eq('role', 'superadmin')
+    .limit(1)
+    .maybeSingle()
+
+  if (!member || !member.is_active) {
+    throw createError({ statusCode: 403, message: 'Forbidden' })
+  }
+
+  return user
+}
