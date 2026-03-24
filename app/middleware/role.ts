@@ -7,6 +7,11 @@ export default defineNuxtRouteMiddleware(async (to) => {
   // Wait for member data to load if not available yet
   // Pages that need role checks should ensure the member is loaded
 
+  // Wishlists page: superadmin only
+  if (to.path.includes('/dashboard/wishlists') && role.value !== 'superadmin') {
+    return navigateTo('/dashboard/business')
+  }
+
   // Members page: superadmin, owner, or business-admin only
   if (to.path.includes('/members') && !(role.value === 'superadmin' || role.value === 'owner' || (role.value === 'admin' && scopeType.value === 'business'))) {
     const slug = to.params.businessSlug as string

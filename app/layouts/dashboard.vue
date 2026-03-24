@@ -58,6 +58,13 @@
               <UIcon :name="item.icon" class="size-4" />
               {{ item.label }}
             </NuxtLink>
+            <div v-if="isSuperAdmin" class="pt-2 mt-2 border-t border-gray-100 dark:border-gray-800">
+              <p class="px-2.5 mb-1 text-[11px] font-semibold uppercase tracking-wider text-muted">Super Admin</p>
+              <NuxtLink to="/dashboard/wishlists" class="flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-[13px] font-medium transition-colors hover:bg-accented cursor-pointer" active-class="bg-primary-500/10 text-primary-500" @click="sidebarOpen = false">
+                <UIcon name="i-lucide-clipboard-list" class="size-4" />
+                Wishlists
+              </NuxtLink>
+            </div>
             <div class="pt-2 mt-2 border-t border-gray-100 dark:border-gray-800">
               <NuxtLink to="/cashier" class="flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-[13px] font-medium bg-primary-500/10 text-primary-500 hover:bg-primary-500/20 transition-colors cursor-pointer" @click="sidebarOpen = false">
                 <UIcon name="i-lucide-scan-line" class="size-4" />
@@ -134,7 +141,7 @@ const isDark = computed({
 })
 
 const { businesses, activeBusiness, loading, refreshBusinesses, businessSlug } = useBusiness()
-const { canManageMembers, canManageSettings, canManagePrograms } = usePermission()
+const { canManageMembers, canManageSettings, canManagePrograms, isSuperAdmin } = usePermission()
 
 const basePath = computed(() => businessSlug.value ? `/dashboard/${businessSlug.value}` : '')
 
