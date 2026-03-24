@@ -176,7 +176,7 @@
 definePageMeta({ layout: 'default' })
 
 const config = useRuntimeConfig()
-const isWishlistMode = computed(() => config.public.wishlistMode === 'true')
+const isWishlistMode = computed(() => config.public.wishlistMode)
 
 const features = [
   {

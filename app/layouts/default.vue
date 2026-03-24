@@ -131,5 +131,5 @@
 
 <script setup lang="ts">
 const config = useRuntimeConfig()
-const isWishlistMode = computed(() => config.public.wishlistMode === 'true')
+const isWishlistMode = computed(() => config.public.wishlistMode)
 </script>

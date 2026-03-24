@@ -56,7 +56,7 @@ export default defineNuxtConfig({
 
     public: {
       appUrl: 'http://localhost:8989',
-      wishlistMode: '',  // Set to 'true' in .env to enable wishlist mode
+      wishlistMode: process.env.NUXT_PUBLIC_WISHLIST_MODE === 'true',  // Set to 'true' in .env to enable wishlist mode
     },
   },
 
