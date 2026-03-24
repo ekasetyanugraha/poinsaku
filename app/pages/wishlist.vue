@@ -55,19 +55,12 @@
           <p v-if="errors.email" class="text-xs text-red-500 mt-1">{{ errors.email }}</p>
         </UFormField>
 
-        <UFormField label="Nama Perusahaan">
-          <UInput
-            v-model="form.company"
-            placeholder="Nama bisnis atau perusahaan"
-            icon="i-lucide-building-2"
-          />
-        </UFormField>
-
-        <UFormField label="Industri">
+        <UFormField label="Industri" required>
           <USelect
             v-model="form.industry"
             :items="industryOptions"
             placeholder="Pilih industri..."
+            :class="{ 'ring-1 ring-red-500 rounded-md': errors.industry }"
           />
           <UInput
             v-if="form.industry === 'others'"
@@ -75,6 +68,16 @@
             placeholder="Sebutkan industri Anda"
             class="mt-2"
             :maxlength="100"
+            :class="{ 'ring-1 ring-red-500': errors.industry && !form.industryCustom.trim() }"
+          />
+          <p v-if="errors.industry" class="text-xs text-red-500 mt-1">{{ errors.industry }}</p>
+        </UFormField>
+
+        <UFormField label="Nama Perusahaan">
+          <UInput
+            v-model="form.company"
+            placeholder="Nama bisnis atau perusahaan"
+            icon="i-lucide-building-2"
           />
         </UFormField>
 
@@ -105,9 +108,9 @@
 definePageMeta({ layout: false })
 
 const industryOptions = [
-  { label: 'Pilih industri...', value: '' },
+  { label: 'Pilih industri...', value: undefined },
   { label: 'F&B (Makanan & Minuman)', value: 'fnb' },
-  { label: 'Jasa (Barbershop/Salon)', value: 'services' },
+  { label: 'Jasa', value: 'services' },
   { label: 'Kecantikan', value: 'beauty' },
   { label: 'Kesehatan & Wellbeing', value: 'wellbeing' },
   { label: 'Medis', value: 'medical' },
@@ -118,7 +121,7 @@ const form = reactive({
   name: '',
   email: '',
   company: '',
-  industry: '',
+  industry: undefined,
   industryCustom: '',
   message: '',
 })
@@ -126,6 +129,7 @@ const form = reactive({
 const errors = reactive({
   name: '',
   email: '',
+  industry: '',
 })
 
 const loading = ref(false)
@@ -135,6 +139,7 @@ const submitted = ref(false)
 function validateForm(): boolean {
   errors.name = ''
   errors.email = ''
+  errors.industry = ''
 
   if (!form.name.trim()) {
     errors.name = 'Nama wajib diisi'
@@ -144,8 +149,13 @@ function validateForm(): boolean {
   } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
     errors.email = 'Format email tidak valid'
   }
+  if (!form.industry) {
+    errors.industry = 'Industri wajib dipilih'
+  } else if (form.industry === 'others' && !form.industryCustom.trim()) {
+    errors.industry = 'Sebutkan industri Anda'
+  }
 
-  return !errors.name && !errors.email
+  return !errors.name && !errors.email && !errors.industry
 }
 
 async function handleSubmit() {

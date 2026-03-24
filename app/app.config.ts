@@ -12,9 +12,14 @@ export default defineAppConfig({
     select: {
       slots: {
         base: [
-          'relative group rounded-md flex items-center focus:outline-none disabled:cursor-not-allowed disabled:opacity-75',
+          'w-full relative group rounded-md flex items-center focus:outline-none disabled:cursor-not-allowed disabled:opacity-75',
           'transition-colors',
         ],
+      },
+    },
+    textarea: {
+      slots: {
+        root: 'relative flex items-center',
       },
     },
   },
